@@ -1,0 +1,12 @@
+
+{{ testdata }}
+{{ ankaios_list }}
+{% if ankaios_list %}
+    <ul>
+    {% for id in ankaios_list %}
+        <div style="background-color:magenta">{{id}}</div>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
