@@ -3,6 +3,7 @@ from django.template import loader
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django import forms
+from . import mqtt_handler
 
 class UploadFileForm(forms.Form):
     title = forms.CharField(max_length=50)
@@ -44,7 +45,10 @@ def index(request):
     if request.method == "POST":
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            deploy_yaml(request.FILES["file"])
+            file = request.FILES["file"]
+            file.seek(0)
+            yaml_content = file.read()
+            mqtt_handler.deploy_yaml(yaml_content)
             return HttpResponseRedirect("/")
     else:
         form = UploadFileForm()
@@ -54,10 +58,6 @@ def index(request):
         "file_upload_form" : form
     }
     return render(request, "ankaios_deploy_manager/index.html", context)
-
-def deploy_yaml(yaml_file):
-    #TODO Implement YAML deployment over MQTT 
-    pass
 
 def update_connector(id):
     #TODO Implement new connector registration over MQTT
