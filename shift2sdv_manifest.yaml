@@ -2,7 +2,7 @@ apiVersion: v0.1
 workloads:
   Ankaios_Dashboard:
     runtime: podman
-    agent: agent_A
+    agent: dashboard
     restart: true
     updateStrategy: AT_LEAST_ONCE
     accessRights:
@@ -20,7 +20,7 @@ workloads:
             filterMask:
               - "desiredState"
               - "workloadStates"
-  symphony_provider:
+  fleet_manager:
     runtime: podman
     agent: hpc1
     controlInterfaceAccess:

@@ -3,14 +3,16 @@ import settings
 import json
 
 active_clusters = 0
+BASE_TOPIC = f"vehicle/1"
 
-MANIFEST_APPLY_TOPIC = 'ankaios_deploy_manager/mqtt/deploy_yaml'
+MANIFEST_APPLY_TOPIC = f"{BASE_TOPIC}/manifest/apply/req"
 UPDATE_DATA_TOPIC = 'ankaios_deploy_manager/mqtt/update_cluster'
 REMOVE_DATA_TOPIC = 'ankaios_deploy_manager/mqtt/remove_cluster'
 
 def on_connect(mqtt_client, userdata, flags, rc):
    if rc == 0:
        print('Connected successfully')
+       mqtt_client.subscribe(MANIFEST_APPLY_TOPIC)
        mqtt_client.subscribe(UPDATE_DATA_TOPIC)
        mqtt_client.subscribe(REMOVE_DATA_TOPIC)
    else:

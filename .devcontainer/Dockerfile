@@ -23,6 +23,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     jq \
     python3 \
     python3-pip \
+    mosquitto \
     # Add your development tools here ...
     && curl -sL https://github.com/mikefarah/yq/releases/latest/download/yq_linux_${TARGETARCH} -o /usr/bin/yq \
     && chmod +x /usr/bin/yq \
@@ -50,4 +51,6 @@ RUN git config --global --add safe.directory '*' \
 
 RUN PIP_BREAK_SYSTEM_PACKAGES=1 pip install \
     fastapi \
-    uvicorn
+    uvicorn \
+    paho-mqtt \
+    ankaios-sdk
