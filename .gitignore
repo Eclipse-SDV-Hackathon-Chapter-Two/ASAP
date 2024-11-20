@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+
+# VS Code files
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Custom folders
+measurements/
+
+# logs
+.logs
