@@ -41,8 +41,7 @@ with Ankaios() as ankaios:
         # Callback when the client receives a CONNACK response from the MQTT server
     def on_connect(client, userdata, flags, reason_code, properties):
         client.subscribe(f"{BASE_TOPIC}/manifest/apply/req")
-        #client.subscribe(f"{BASE_TOPIC}/manifest/delete/req")
-        #client.subscribe(f"{BASE_TOPIC}/state/req")
+        client.subscribe(f"{BASE_TOPIC}/error_speed")
 
     # Callback when a PUBLISH message is received from the MQTT server
     def on_manifest_update(client, userdata, msg):
@@ -54,16 +53,10 @@ with Ankaios() as ankaios:
                 ret = ankaios.apply_manifest(manifest)
                 if ret is not None:
                     client.publish(f"{BASE_TOPIC}/manifest/apply/resp", json.dumps(ret.to_dict()))
-            # Handle request for deleting a manifest
-            #elif msg.topic == f"{BASE_TOPIC}/manifest/delete/req":
-            #    manifest = Manifest.from_string(str(msg.payload.decode()))
-            #    ret = ankaios.delete_manifest(manifest)
-            #    if ret is not None:
-            #        client.publish(f"{BASE_TOPIC}/manifest/delete/resp", json.dumps(ret.to_dict()))
-            # Handle request for getting the state of Ankaios
-            #elif msg.topic == f"{BASE_TOPIC}/state/req":
-            #    state = ankaios.get_state(field_masks=json.loads(str(msg.payload.decode())))
-            #    client.publish(f"{BASE_TOPIC}/state/resp", json.dumps(state.to_dict()))
+            # Handle vehicle speed error requests
+            elif msg.topic == f"{BASE_TOPIC}/error_speed":
+                speed = str(msg.payload.decode())
+                logger.info(f"Received error speed: {speed}")
         except Exception as e:
             logger.error(f"Error processing message: {e}")
 

@@ -12,9 +12,10 @@
 
 # SPDX-License-Identifier: Apache-2.0
 
-import sys, time, json, logging
+import sys, time, json, logging, os
 
 import ecal.core.core as ecal_core
+import paho.mqtt.client as mqtt
 from ecal.core.subscriber import StringSubscriber
 
 logger = logging.getLogger("example_app")
@@ -23,11 +24,26 @@ stdout.setLevel(logging.INFO)
 logger.addHandler(stdout)
 logger.setLevel(logging.INFO)
 
+# Speed handling topic
+BROKER = os.environ.get('MQTT_BROKER_ADDR', 'localhost')
+PORT = int(os.environ.get('MQTT_BROKER_PORT', '1883'))
+VEHICLE_ID = os.environ.get('VIN')
+TOPIC = f'vehicle/{VEHICLE_ID}/error_speed'
+INTERVAL = int(os.environ.get('INTERVAL', '1'))
+# Create an MQTT client instance
+mqtt_client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
+mqtt_client.connect(BROKER, PORT, 60)
+
 # Callback for receiving messages
 def callback(topic_name, msg, time):
     try:
         json_msg = json.loads(msg)
-        print(f"Received: {msg}")
+        speed = json_msg["signals"]["speed"]
+        logger.info(f"Received: {speed}")
+
+        #TODO: if vehicle speed is erroneous, only then pub to topic
+        if speed < 20:
+            mqtt_client.publish(TOPIC, speed)
     except json.JSONDecodeError:
         logger.error(f"Error: Could not decode message: '{msg}'")
     except Exception as e:
