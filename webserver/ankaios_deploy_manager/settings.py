@@ -121,3 +121,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# MQTT
+MQTT_SERVER = 'mqtt.broker.org'
+MQTT_PORT = 1883
+MQTT_KEEPALIVE = 60
+MQTT_USER = ''
+MQTT_PASSWORD = ''
