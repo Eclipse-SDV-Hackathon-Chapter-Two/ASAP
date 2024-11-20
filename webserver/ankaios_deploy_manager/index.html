@@ -1,12 +1,115 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+<meta charset="utf-8"> 
+<meta name="viewport"
+		content="width=device-width, 
+				initial-scale=1, 
+				shrink-to-fit=no"> 
+<title> 
+	load data from json file 
+	into a bootstrap table 
+</title> 
 
-{{ testdata }}
-{{ ankaios_list }}
-{% if ankaios_list %}
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ file_upload_form }}
-<button type="submit">Upload</button>
+<!-- Include Bootstrap for styling -->
+<link rel="stylesheet"
+		href= 
+"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> 
+
+<!-- Include the Bootstrap Table CSS 
+for the table -->
+<link rel="stylesheet"
+		href= 
+"https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css"> 
+</head> 
+<body> 
+<div class="container"> 
+	<h1 class="text text-success text-center "> 
+	Ankaios Cluster 
+	</h1> 
+	<h6 class="text text-success text-center"> 
+	Overview of Ankaios Containers
+	</h6> 
+	<table class="table-striped border-success" style="width:100%"> 
+		<thead> 
+		<tr> 
+			<th data-field="id"> 
+			<span class="text-success"> 
+				Cluster ID
+			</span> 
+			</th> 
+			<th data-field="name"> 
+			<span class="text-success"> 
+				Agent ID
+			</span> 
+			</th> 
+			<th data-field="date"> 
+			<span class="text-success"> 
+				Agent Name
+			</span> 
+			</th> 
+			<th data-field="date"> 
+			<span class="text-success"> 
+				Workload Name
+			</span> 
+			</th> 
+			<th data-field="date"> 
+			<span class="text-success"> 
+				Workload Version
+			</span> 
+			</th> 
+            <th data-field="date"> 
+            <span class="text-success"> 
+                Update Cluster
+            </span> 
+            </th> 
+		</tr>
+        {% if ankaios_list %}
+        <form action="update" method="POST" id="agentform"></form>
+            {% for cluster in ankaios_list %}
+                {% for agent in cluster.agents %}
+                    {% for workload in agent.active_workloads %}
+                    <tr>
+                        <td>{{cluster.cluster_id}}</td>
+                        <input type="hidden" name="cluster_id" value={{cluster.cluster_id}}/>
+                        <td>{{agent.agent_id}}</td>
+                        <input type="hidden" name="agent_id" value={{agent.agent_id}}/>
+                        <td>{{agent.agent_name}}</td>
+                        <input type="hidden" name="agent_name" value={{agent.agent_name}}/>
+                        <td>{{workload.workload_name}}</td>
+                        <input type="hidden" name="workload_name" value={{workload.workload_name}}/>
+                        <td>{{workload.workload_version}}</td>
+                        <input type="hidden" name="workload_version" value={{workload.workload_version}}/>
+                    {% endfor %}
+                    <td>
+                        <input type="checkbox" title="update" id=update_{{agent.agent_id}}_{{workload.workload_name}}/>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% endfor %}
+        {% else %}
+        <tr>
+            <p>No polls are available.</p>
+        </tr>
+        {% endif %}
+		</thead>
+	</table> 
+    {{file_upload_form}}
 </form>
-{% else %}
-    <p>No polls are available.</p>
-{% endif %}
+    <button type="submit" form="agentform" value="Submit">Submit</button>
+</div> 
+<script src= 
+"https://code.jquery.com/jquery-3.3.1.min.js"> 
+  </script> 
+  <script src= 
+"https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"> 
+  </script> 
+  <script src= 
+"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"> 
+  </script> 
+<script src= 
+"https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"> 
+  </script>
+  
+</body> 
+</html>

@@ -53,4 +53,5 @@ RUN PIP_BREAK_SYSTEM_PACKAGES=1 pip install \
     fastapi \
     uvicorn \
     paho-mqtt \
-    ankaios-sdk
+    ankaios-sdk \
+    django
