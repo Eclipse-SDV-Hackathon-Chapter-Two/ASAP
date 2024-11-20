@@ -50,7 +50,7 @@ def index(request):
             file = request.FILES["file"]
             file.seek(0)
             yaml_content = file.read()
-            mqtt_handler.deploy_yaml(yaml_content)
+            mqtt_handler.MqttHandler.deploy_yaml(yaml_content)
             return HttpResponseRedirect("/")
     else:
         form = UploadFileForm()

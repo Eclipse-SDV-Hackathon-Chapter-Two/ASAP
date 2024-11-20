@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from ankaios_deploy_manager.mqtt import mqtt_handler
 
 from . import views
 
@@ -23,3 +24,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", views.index, name="index"),
 ]
+
+mqtt_handler.MqttHandler.run_client()
