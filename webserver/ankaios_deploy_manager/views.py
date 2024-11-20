@@ -3,10 +3,9 @@ from django.template import loader
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django import forms
-from . import mqtt_handler
+from ankaios_deploy_manager.mqtt import mqtt_handler
 
 class UploadFileForm(forms.Form):
-    title = forms.CharField(max_length=50)
     file = forms.FileField()
 
 def index(request):
@@ -44,7 +43,10 @@ def index(request):
 
     if request.method == "POST":
         form = UploadFileForm(request.POST, request.FILES)
+        print("Request")
+        print(request)
         if form.is_valid():
+            print("Valid")
             file = request.FILES["file"]
             file.seek(0)
             yaml_content = file.read()

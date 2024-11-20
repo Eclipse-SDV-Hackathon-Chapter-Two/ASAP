@@ -1,5 +1,5 @@
 import paho.mqtt.client as mqtt
-import settings
+from ankaios_deploy_manager import settings
 import json
 
 active_clusters = 0
@@ -57,7 +57,6 @@ client.connect(
     port=settings.MQTT_PORT,
     keepalive=settings.MQTT_KEEPALIVE
 )
-client.loop_start()
 
 def deploy_yaml(yaml):
     client.publish(MANIFEST_APPLY_TOPIC, yaml)

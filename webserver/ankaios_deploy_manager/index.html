@@ -2,11 +2,11 @@
 {{ testdata }}
 {{ ankaios_list }}
 {% if ankaios_list %}
-    <ul>
-    {% for id in ankaios_list %}
-        <div style="background-color:magenta">{{id}}</div>
-    {% endfor %}
-    </ul>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ file_upload_form }}
+<button type="submit">Upload</button>
+</form>
 {% else %}
     <p>No polls are available.</p>
 {% endif %}
