@@ -1,57 +1,128 @@
-# Example Application
+# Vehicle State Log
 
-The Example App show how data from the vehicle can be received by an application running in the vehicle.
+The vehicle state log parses eCal messages from the "vehicle_dynamics" topic, aggregates them with the Ankaios workload states information as well as vehicle ID and publishes them together via an MQTT "vehicle/vehicle_dynamics" topic.
 
-## Build
+For this workload to publish messages, you need either live eCal data or feed it via ecal_play. Example: "ecal_play -m measurements/2024-11-19_15-45-14.870_measurement"
 
-When running `restart-shift2sdv`, or explicitly the `build-apps` script, the Example App will be build and containerized automatically as `ghcr.io/eclipse-sdv-hackathon-chapter-two/shift2sdv/example_app:latest`.
+Example of one message at a given timeframe:
 
-Of course, you are free to build manually if needed by calling the following command from the example_app folder:
-
-```shell
-podman build -t example_app:latest .
+```json
+{
+   "header":{
+      "timestamp":"1732027561098925"
+   },
+   "errs":{
+      "speed":"STATE_FAULT",
+      "speedDisplayed":"STATE_FAULT",
+      "longAcc":"STATE_FAULT",
+      "latAcc":"STATE_FAULT",
+      "yawrate":"STATE_FAULT",
+      "steeringWheelAngle":"STATE_FAULT",
+      "steeringWheelAngleSpeed":"STATE_FAULT",
+      "drvSteerTorque":"STATE_FAULT",
+      "timeSinceLastClick":"STATE_FAULT",
+      "wheelSteeringAngleFront":"STATE_FAULT",
+      "wheelSteeringAngleRear":"STATE_FAULT"
+   },
+   "signals":{
+      "speed":19.372236,
+      "speedDisplayed":20.000015,
+      "speedPerWheel":[
+         19.366682,
+         19.360432,
+         19.283348,
+         19.272932
+      ],
+      "longAcc":0.21875,
+      "latAcc":-0.01,
+      "yawrate":-0.00261795,
+      "steeringWheelAngle":-0.0069812,
+      "steeringWheelAngleSpeed":0.0,
+      "drvSteerTorque":0.0,
+      "timeSinceLastClick":0.0,
+      "wheelSteeringAngleFront":0.0,
+      "wheelSteeringAngleRear":0.0
+   },
+   "variances":{
+      "speed":0.0,
+      "speedDisplayed":0.0,
+      "longAcc":0.0,
+      "latAcc":0.0,
+      "yawrate":0.0,
+      "steeringWheelAngle":0.0,
+      "steeringWheelAngleSpeed":0.0,
+      "drvSteerTorque":0.0,
+      "timeSinceLastClick":0.0,
+      "wheelSteeringAngleFront":0.0,
+      "wheelSteeringAngleRear":0.0
+   },
+   "timestamps":{
+      "speed":"0",
+      "speedDisplayed":"0",
+      "longAcc":"0",
+      "latAcc":"0",
+      "yawrate":"0",
+      "steeringWheelAngle":"0",
+      "steeringWheelAngleSpeed":"0",
+      "drvSteerTorque":"0",
+      "timeSinceLastClick":"0",
+      "wheelSteeringAngleFront":"0",
+      "wheelSteeringAngleRear":"0"
+   },
+   "workload_states":{
+      "dashboard":{
+         "Ankaios_Dashboard":{
+            "0ba32254b65c5077bfb7149fdc9960f5af3fedcf4622684c812bc69fa7acafc2":{
+               "state":"RUNNING",
+               "substate":"RUNNING_OK",
+               "additional_info":""
+            }
+         }
+      },
+      "hpc2":{
+         "speed_limit_assist":{
+            "1e600376e674d26d31edec1c65da3e730538ca8d2e7b38812412462f585c233e":{
+               "state":"RUNNING",
+               "substate":"RUNNING_OK",
+               "additional_info":""
+            }
+         },
+         "web_ivi":{
+            "ef0a5f7acc914f9b5bdc73b43abf6722f89c50c08f6c4c1ebd0c5f172fa22fee":{
+               "state":"RUNNING",
+               "substate":"RUNNING_OK",
+               "additional_info":""
+            }
+         },
+         "vehicle_state_log":{
+            "5d6a239725d411297393133ffdd27ea4d6f61c843b1187c71e7faebfdcfe0595":{
+               "state":"RUNNING",
+               "substate":"RUNNING_OK",
+               "additional_info":""
+            }
+         }
+      },
+      "hpc1":{
+         "fleet_manager":{
+            "db410849ad59246596becd09690543254a57ba333e7262af8a3b6fa3d8f440ee":{
+               "state":"RUNNING",
+               "substate":"RUNNING_OK",
+               "additional_info":""
+            }
+         }
+      }
+   },
+   "vehicle_id":"1"
+}
 ```
 
-**Note:** Inside the test-vehicle the Example App will run on ARM-Platform. Test the build by running the command above and ask the hack coaches to build your image for ARM to run it inside the test vehicle.
+## Development 
 
-## Running
-
-The Example App is automatically started by Ankaios as there is an entry for it in the [shift2sdv_manifest.yaml](shift2sdv_manifest.yaml).
-
-In the test vehicle the Example App container image will be started and managed by Eclipse Ankaios.
-
-Talk to the hack coaches to build a multi-platform or ARM image before trying to run the app in the vehicle.
-
-## Development
-
-### Run
-
-Start the app inside the devcontainer for local development:
+The `restart-shift2sdv` script provides a very quick and convenient way to develop the application is short cycle.
+[!Note] Before running the application, the MQTT broker has to be up and running under the IP specified in the env var inside "shift2sdv_manifest.yaml"!
 
 ```shell
-python3 example_app.py
+restart-shift2sdv
+ecal_play -m measurements/2024-11-19_15-45-14.870_measurement
+ank-logs "vehicle_state_log"
 ```
-
-### Testing with mock data
-
-Ask the hack coaches for an eCAL recording to play back a recorded driving scenario with eCAL and to receive the vehicle dynamics data in the Example App for development.
-
-Place the downloaded eCAL recording in a `measurements/` folder next to the current file.
-
-Start the eCAL recording within the devcontainer, replace `<recording_folder>` with the recording folder you received from the hack coaches:
-
-```shell
-ecal_play -m measurements/<recording_folder>
-```
-
-Start the Example App inside the devcontainer as shown above.
-
-You should see logs of the JSON data received, and in the web browser the tachometer should show some speed values.
-
-For debugging reasons you can start the eCAL Monitor terminal UI in a separate terminal window by running:
-
-```shell
-ecal_mon_tui
-```
-
-This lists all eCAL topics with their contents and meta information the host or container can see.

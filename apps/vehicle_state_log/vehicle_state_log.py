@@ -14,7 +14,7 @@
 
 import sys, time, json, logging, os
 
-from ankaios_sdk import Workload, Ankaios, WorkloadStateEnum, WorkloadSubStateEnum, AnkaiosLogLevel, Manifest, Request, CompleteState
+from ankaios_sdk import Ankaios
 import ecal.core.core as ecal_core
 import paho.mqtt.client as mqtt
 from ecal.core.subscriber import StringSubscriber

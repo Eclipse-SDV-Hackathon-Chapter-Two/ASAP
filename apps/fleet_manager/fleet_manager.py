@@ -12,13 +12,11 @@
 
 # SPDX-License-Identifier: Apache-2.0
 
-from ankaios_sdk import Workload, Ankaios, WorkloadStateEnum, WorkloadSubStateEnum, AnkaiosLogLevel, Manifest, Request, CompleteState
+from ankaios_sdk import Ankaios, Manifest
 import paho.mqtt.client as mqtt
-import json
 import os
 import logging
 import sys
-import time
 
 logger = logging.getLogger("fleet_manager")
 stdout = logging.StreamHandler(stream=sys.stdout)
@@ -36,11 +34,9 @@ BASE_TOPIC = f"vehicle/{VEHICLE_ID}"
 # The connection to the control interface is automatically done at this step.
 with Ankaios() as ankaios:
 
-        # Callback when the client receives a CONNACK response from the MQTT server
     def on_connect(client, userdata, flags, reason_code, properties):
         client.subscribe(f"{BASE_TOPIC}/manifest/apply/req")
 
-    # Callback when a PUBLISH message is received from the MQTT server
     def on_manifest_update(client, userdata, msg):
         try:
             logger.info(f"Received message on topic {msg.topic} with payload {msg.payload.decode()}")
