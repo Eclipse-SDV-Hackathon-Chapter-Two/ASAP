@@ -27,8 +27,8 @@ class SpeedLimitAssist:
         '''Checks if driver is exceeding the speed limit'''
         if self.vel_mps > 0.0 and self.limit > 0.0:
             exceeded_speed = self.vel_mps - self.limit
-            if exceeded_speed > 0.0 and self.limit_confidence > 0.6:
-                warning = "You are exceeding the current speed limit= " + str(mps2kmh(self.limit)) + " by " + str(mps2kmh(exceeded_speed)) +  "km/h with a confidence of " + str(self.limit_confidence)
+            if exceeded_speed > 0.99:
+                warning = "You are exceeding the current speed limit: " + str(int(mps2kmh(self.limit))) + " km/h by " + str(int(mps2kmh(exceeded_speed))) +  " km/h"
                 logger.warning(warning)
                 return exceeded_speed
         else:
@@ -78,45 +78,36 @@ def speed_limit_callback(topic_name, msg, time):
             for i in range(0, len(class_ids)):
                 class_id = class_ids[i]
                 confidence = confidences[i]
-                # Todo: Check ClassIDs
+
                 if class_id == 4:
                     current_speed_limit = kmh2mps(10)
                 elif class_id == 5:
                     current_speed_limit = kmh2mps(100)
                 elif class_id == 6:
-                    current_speed_limit = kmh2mps(105)
-                elif class_id == 7:
-                    current_speed_limit = kmh2mps(110)
-                elif class_id == 8:
-                    current_speed_limit = kmh2mps(115)
-                elif class_id == 9:
-                    current_speed_limit = kmh2mps(120)
-                elif class_id == 10:
                     current_speed_limit = kmh2mps(130)
-                elif class_id == 11:
+                elif class_id == 7:
                     current_speed_limit = kmh2mps(20)
-                elif class_id == 12:
+                elif class_id == 8:
                     current_speed_limit = kmh2mps(30)
-                elif class_id == 13:
+                elif class_id == 9:
                     current_speed_limit = kmh2mps(40)
-                elif class_id == 14:
+                elif class_id == 10:
                     current_speed_limit = kmh2mps(5)
-                elif class_id == 15:
+                elif class_id == 11:
                     current_speed_limit = kmh2mps(50)
-                elif class_id == 16:
+                elif class_id == 12:
                     current_speed_limit = kmh2mps(60)
-                elif class_id == 17:
+                elif class_id == 13:
                     current_speed_limit = kmh2mps(70)
-                elif class_id == 18:
+                elif class_id == 14:
                     current_speed_limit = kmh2mps(80)
-                elif class_id == 19:
+                elif class_id == 15:
                     current_speed_limit = kmh2mps(90)
                 
                 # Just store Speed Limits with high confidence
                 if confidence > 0.6:
                     speedLimitAssist.limit = current_speed_limit
                     speedLimitAssist.limit_confidence = confidence
-        #print(f"Received speed_limit: {current_speed_limit}")
     except json.JSONDecodeError:
         logger.error(f"Error: Could not decode message: '{msg}'")
     except Exception as e:
