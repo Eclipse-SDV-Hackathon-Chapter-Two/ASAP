@@ -1,6 +1,10 @@
 import paho.mqtt.client as mqtt
 from ankaios_deploy_manager import settings
 import json
+from logging import Logger
+
+
+logger = Logger(__name__)
 
 VEHICLE_DYNAMICS_TOPIC = 'vehicle/vehicle_dynamics'
 REMOVE_DATA_TOPIC = 'ankaios_deploy_manager/mqtt/remove_cluster'
@@ -11,11 +15,11 @@ class MqttHandler():
 
     def on_connect(mqtt_client, userdata, flags, rc):
         if rc == 0:
-            print('Connected successfully')
+            logger.info('Connected successfully')
             mqtt_client.subscribe(VEHICLE_DYNAMICS_TOPIC)
             mqtt_client.subscribe(REMOVE_DATA_TOPIC)
         else:
-            print('Bad connection. Code:', rc)
+            logger.info('Bad connection. Code:', rc)
 
     def on_message(mqtt_client, userdata, msg):
         if msg.topic == VEHICLE_DYNAMICS_TOPIC:
@@ -24,12 +28,12 @@ class MqttHandler():
             MqttHandler.on_remove_data(msg.payload)
 
     def on_update_data(data):
-        print("on_update_data")
-        print(data)
+        logger.info("on_update_data")
+        logger.info(data)
 
         # To test with windows mosquitto_pub calls
         data = data.decode('ascii').replace("'", "\"")
-        print(data)
+        logger.info(data)
         
         vehicle_dynamics = json.loads(data)
         vehicle_id = vehicle_dynamics['vehicle_id']
@@ -42,8 +46,8 @@ class MqttHandler():
         del MqttHandler.active_vehicle_dynamics[vehicle_id][100:]
         
     def on_remove_data(data):
-        print("on_remove_data")
-        print(data)
+        logger.info("on_remove_data")
+        logger.info(data)
         cluster_data = json.loads(data)[0]
         found_index = -1
         for i in len(MqttHandler.active_clusters):
@@ -53,7 +57,7 @@ class MqttHandler():
 
         if found_index != -1:
             MqttHandler.active_clusters.pop(i)
-            print(f"Removed id: {active_cluster['id']}")
+            logger.info(f"Removed id: {active_cluster['id']}")
 
     def run_client():
         MqttHandler.client = mqtt.Client()
