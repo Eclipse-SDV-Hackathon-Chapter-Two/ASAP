@@ -60,7 +60,7 @@ with Ankaios() as ankaios:
         except Exception as e:
             logger.error(f"Error processing message: {e}")
 
-        # Create an MQTT client instance
+    # Create an MQTT client instance
     mqtt_client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 
     # Assign the callbacks
