@@ -84,28 +84,32 @@ def speed_limit_callback(topic_name, msg, time):
                 elif class_id == 5:
                     current_speed_limit = kmh2mps(100)
                 elif class_id == 6:
-                    current_speed_limit = kmh2mps(110)
+                    current_speed_limit = kmh2mps(105)
                 elif class_id == 7:
-                    current_speed_limit = kmh2mps(120)
+                    current_speed_limit = kmh2mps(110)
                 elif class_id == 8:
-                    current_speed_limit = kmh2mps(130)
+                    current_speed_limit = kmh2mps(115)
                 elif class_id == 9:
-                    current_speed_limit = kmh2mps(20)
+                    current_speed_limit = kmh2mps(120)
                 elif class_id == 10:
-                    current_speed_limit = kmh2mps(30)
+                    current_speed_limit = kmh2mps(130)
                 elif class_id == 11:
-                    current_speed_limit = kmh2mps(40)
+                    current_speed_limit = kmh2mps(20)
                 elif class_id == 12:
-                    current_speed_limit = kmh2mps(5)
+                    current_speed_limit = kmh2mps(30)
                 elif class_id == 13:
-                    current_speed_limit = kmh2mps(50)
+                    current_speed_limit = kmh2mps(40)
                 elif class_id == 14:
-                    current_speed_limit = kmh2mps(60)
+                    current_speed_limit = kmh2mps(5)
                 elif class_id == 15:
-                    current_speed_limit = kmh2mps(70)
+                    current_speed_limit = kmh2mps(50)
                 elif class_id == 16:
-                    current_speed_limit = kmh2mps(80)
+                    current_speed_limit = kmh2mps(60)
                 elif class_id == 17:
+                    current_speed_limit = kmh2mps(70)
+                elif class_id == 18:
+                    current_speed_limit = kmh2mps(80)
+                elif class_id == 19:
                     current_speed_limit = kmh2mps(90)
                 
                 # Just store Speed Limits with high confidence
