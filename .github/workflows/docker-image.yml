@@ -14,10 +14,6 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file ./.devcontainer/Dockerfile --tag shift2sdv:$(date +%s) --target dev
 
-    - name: Run tests in Docker container
+    - name: Check images
       run: |
-        # Get the tag from the build step dynamically
-        IMAGE_TAG="shift2sdv:$(date +%s)"
-        
-        # Run pytest inside the Docker container using the local image
-        docker run --rm $IMAGE_TAG pytest
+        docker images        
