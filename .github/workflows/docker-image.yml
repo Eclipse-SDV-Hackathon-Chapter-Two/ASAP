@@ -16,4 +16,5 @@ jobs:
 
     - name: Run tests in Docker container
       run: |
-        docker images
+        # Run pytest inside the Docker container
+        docker run --rm shift2sdv:$(date +%s) pytest
