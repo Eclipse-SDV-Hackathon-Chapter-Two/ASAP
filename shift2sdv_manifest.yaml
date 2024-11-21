@@ -33,9 +33,15 @@ workloads:
     runtimeConfig: |
       image: ghcr.io/eclipse-sdv-hackathon-chapter-two/shift2sdv/symphony_provider:latest
       commandOptions: [ "--net=host", "-e", "VIN=1"]
-  example_app:
+  vehicle_state_log:
     runtime: podman
     agent: hpc2
+    controlInterfaceAccess:
+      allowRules:
+        - type: StateRule
+          operation: ReadWrite
+          filterMask:
+            - "*"
     restartPolicy: NEVER
     runtimeConfig: |
       image: ghcr.io/eclipse-sdv-hackathon-chapter-two/shift2sdv/example_app:latest
