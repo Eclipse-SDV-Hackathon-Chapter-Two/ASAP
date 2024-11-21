@@ -11,14 +11,12 @@ To orchestrate the workloads, we implemented a simple [webserver](webserver). A 
 ## How to get this to run
 
 1. start dev container
-
-Ideally in separate terminal instances inside your devcontainer:
-
-2. ``restart-shift2sdv``
-3. ``cd webserver && python3 manage.py runserver`` 
-4. ``ecal_play -m measurements/2024-11-19_15-45-14.870_measurement/``
-   1. or wherever you have demo measurement data to play with eCal..
-5. Open the webserver on localhost:8000
+2. in separate terminal instances inside your devcontainer, run the following:
+   1. ``restart-shift2sdv``
+   2. ``cd webserver && python3 manage.py runserver`` 
+   3. ``ecal_play -m measurements/2024-11-19_15-45-14.870_measurement/``
+      1. or wherever you have demo measurement data to play with eCal..
+3. Open the webserver on localhost:8000
 
 ## Technologies used
 - [Ankaios](https://projects.eclipse.org/projects/automotive.ankaios)
