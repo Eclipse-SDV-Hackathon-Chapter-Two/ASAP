@@ -1,62 +1,9 @@
 apiVersion: v0.1
 workloads:
-  Ankaios_Dashboard:
-    runtime: podman
-    agent: dashboard
-    restart: true
-    updateStrategy: AT_LEAST_ONCE
-    accessRights:
-      allow: []
-      deny: []
-    restartPolicy: NEVER 
-    dependencies:
-    runtimeConfig: |
-       image: ghcr.io/felixmoelders/ankaios-dashboard:v0.3
-       commandOptions: ["-p", "5001:5001", "-e", "PASSWORD=admin"]
-    controlInterfaceAccess:
-        allowRules:
-          - type: StateRule
-            operation: ReadWrite
-            filterMask:
-              - "desiredState"
-              - "workloadStates"
-  fleet_manager:
-    runtime: podman
-    agent: hpc1
-    controlInterfaceAccess:
-      allowRules:
-        - type: StateRule
-          operation: ReadWrite
-          filterMask:
-            - "*"
-    restartPolicy: NEVER
-    runtimeConfig: |
-      image: ghcr.io/eclipse-sdv-hackathon-chapter-two/shift2sdv/fleet_manager:latest
-      commandOptions: [ "--net=host","-p", "1883:1883", "-e", "VIN=1", "-e", "MQTT_BROKER_ADDR=20.164.18.107"]
-  vehicle_state_log:
-    runtime: podman
-    agent: hpc2
-    controlInterfaceAccess:
-      allowRules:
-        - type: StateRule
-          operation: ReadWrite
-          filterMask:
-            - "*"
-    restartPolicy: NEVER
-    runtimeConfig: |
-      image: ghcr.io/eclipse-sdv-hackathon-chapter-two/shift2sdv/vehicle_state_log:latest
-      commandOptions: [ "--net=host","-p","1883:1883", "-e", "VIN=1", "-e", "MQTT_BROKER_ADDR=20.164.18.107", "--ipc=host"]
   speed_limit_assist:
     runtime: podman
     agent: hpc2
     restartPolicy: NEVER
     runtimeConfig: |
       image: ghcr.io/eclipse-sdv-hackathon-chapter-two/shift2sdv/speed_limit_assist:latest
-      commandOptions: [ "--net=host", "--ipc=host"]
-  web_ivi:
-    runtime: podman
-    agent: hpc2
-    restartPolicy: NEVER
-    runtimeConfig: |
-      image: ghcr.io/eclipse-sdv-hackathon-chapter-two/shift2sdv/web_ivi:latest
       commandOptions: [ "--net=host", "--ipc=host"]
