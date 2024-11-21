@@ -12,11 +12,12 @@
 
 # SPDX-License-Identifier: Apache-2.0
 
-from ankaios_sdk import Ankaios, Manifest
-import paho.mqtt.client as mqtt
-import os
 import logging
+import os
 import sys
+
+import paho.mqtt.client as mqtt
+from ankaios_sdk import Ankaios, Manifest
 
 logger = logging.getLogger("fleet_manager")
 stdout = logging.StreamHandler(stream=sys.stdout)
@@ -25,9 +26,9 @@ logger.addHandler(stdout)
 logger.setLevel(logging.INFO)
 
 # Get config over environment variables
-BROKER = os.environ.get('MQTT_BROKER_ADDR', 'localhost')
-PORT = int(os.environ.get('MQTT_BROKER_PORT', '1883'))
-VEHICLE_ID = os.environ.get('VIN')
+BROKER = os.environ.get("MQTT_BROKER_ADDR", "localhost")
+PORT = int(os.environ.get("MQTT_BROKER_PORT", "1883"))
+VEHICLE_ID = os.environ.get("VIN")
 BASE_TOPIC = f"vehicle/{VEHICLE_ID}"
 
 # Create a new Ankaios object.
@@ -39,7 +40,9 @@ with Ankaios() as ankaios:
 
     def on_manifest_update(client, userdata, msg):
         try:
-            logger.info(f"Received message on topic {msg.topic} with payload {msg.payload.decode()}")
+            logger.info(
+                f"Received message on topic {msg.topic} with payload {msg.payload.decode()}"
+            )
             # Handle request for applying a manifest
             if msg.topic == f"{BASE_TOPIC}/manifest/apply/req":
                 manifest = Manifest.from_string(str(msg.payload.decode()))

@@ -1,10 +1,12 @@
-import unittest
-import paho.mqtt.client as mqtt
 import json
-import time
 import os
-from unittest.mock import patch, MagicMock
+import time
+import unittest
+from unittest.mock import MagicMock, patch
+
+import paho.mqtt.client as mqtt
 from vehicle_state_log import callback, logger
+
 
 # Mock the Ankaios class
 # Mock the Ankaios class
@@ -13,7 +15,7 @@ class MockAnkaios:
         self.state = {
             "workload_states": [
                 {"workload_id": "1", "state": "RUNNING"},
-                {"workload_id": "2", "state": "STOPPED"}
+                {"workload_id": "2", "state": "STOPPED"},
             ]
         }
 
@@ -25,6 +27,7 @@ class MockAnkaios:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         pass
+
 
 # Mock the MQTT client
 class MockMQTTClient:
@@ -40,13 +43,14 @@ class MockMQTTClient:
     def loop_forever(self):
         pass
 
+
 class TestVehicleStateLog(unittest.TestCase):
     def setUp(self):
         # Set environment variables
-        os.environ['MQTT_BROKER_ADDR'] = 'localhost'
-        os.environ['MQTT_BROKER_PORT'] = '1883'
-        os.environ['VIN'] = 'test_vin'
-        os.environ['INTERVAL'] = '1'
+        os.environ["MQTT_BROKER_ADDR"] = "localhost"
+        os.environ["MQTT_BROKER_PORT"] = "1883"
+        os.environ["VIN"] = "test_vin"
+        os.environ["INTERVAL"] = "1"
 
         # Mock the Ankaios class
         self.ankaios_mock = MockAnkaios()
@@ -55,8 +59,12 @@ class TestVehicleStateLog(unittest.TestCase):
         self.mqtt_client_mock = MockMQTTClient()
 
         # Patch the Ankaios     and MQTT client
-        self.ankaios_patch = patch('vehicle_state_log.Ankaios', return_value=self.ankaios_mock)
-        self.mqtt_client_patch = patch('vehicle_state_log.mqtt.Client', return_value=self.mqtt_client_mock)
+        self.ankaios_patch = patch(
+            "vehicle_state_log.Ankaios", return_value=self.ankaios_mock
+        )
+        self.mqtt_client_patch = patch(
+            "vehicle_state_log.mqtt.Client", return_value=self.mqtt_client_mock
+        )
 
         self.ankaios_patch.start()
         self.mqtt_client_patch.start()
@@ -80,9 +88,9 @@ class TestVehicleStateLog(unittest.TestCase):
             "direction": "north",
             "workload_states": [
                 {"workload_id": "1", "state": "RUNNING"},
-                {"workload_id": "2", "state": "STOPPED"}
+                {"workload_id": "2", "state": "STOPPED"},
             ],
-            "vehicle_id": "test_vin"
+            "vehicle_id": "test_vin",
         }
 
         # Verify the published message
@@ -91,5 +99,6 @@ class TestVehicleStateLog(unittest.TestCase):
         self.assertEqual(topic, "vehicle/vehicle_dynamics")
         self.assertEqual(json.loads(payload), expected_payload)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()
