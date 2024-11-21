@@ -24,6 +24,7 @@ logger.addHandler(stream_handler)
 
 stop_server_side_event = threading.Event()
 
+
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     """
@@ -43,7 +44,8 @@ async def lifespan(_app: FastAPI):
     # Run on shutdown
     # Finalize eCAL API
     ecal_core.finalize()
-    logger.info('Shutting down...')
+    logger.info("Shutting down...")
+
 
 # create a route that delivers the statc/index.html file
 app = FastAPI(lifespan=lifespan)
@@ -58,6 +60,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/", response_class=HTMLResponse)
 def home():
     """
@@ -67,6 +70,7 @@ def home():
         FileResponse: A response object that serves the "static/index.html" file.
     """
     return FileResponse("static/index.html")
+
 
 @app.get("/vehicle-dynamics")
 async def vehicle_dynamics():
@@ -80,8 +84,9 @@ async def vehicle_dynamics():
     Returns:
         StreamingResponse: A streaming response with vehicle dynamics data in SSE format.
     """
+
     async def vehicle_dynamics_generator():
-        vehicle_dynamics_queue = Queue() # Already synchronized queue
+        vehicle_dynamics_queue = Queue()  # Already synchronized queue
 
         # Define an ecal callback triggered when receiving data through the ecal topic
         def callback_vehicle_dynamics(_topic_name, msg, _time):
@@ -107,8 +112,11 @@ async def vehicle_dynamics():
 
         # Finalize eCAL API
         ecal_core.finalize()
-    return StreamingResponse(vehicle_dynamics_generator(), media_type="text/event-stream")
+
+    return StreamingResponse(
+        vehicle_dynamics_generator(), media_type="text/event-stream"
+    )
+
 
 if __name__ == "__main__":
     run(app, host="0.0.0.0", port=5500)
-

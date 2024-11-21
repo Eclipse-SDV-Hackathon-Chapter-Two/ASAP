@@ -26,14 +26,15 @@ logger.addHandler(stdout)
 logger.setLevel(logging.INFO)
 
 # Vehice dynamics handling topic
-BROKER = os.environ.get('MQTT_BROKER_ADDR', 'localhost')
-PORT = int(os.environ.get('MQTT_BROKER_PORT', '1883'))
-VEHICLE_ID = os.environ.get('VIN')
-TOPIC = f'vehicle/vehicle_dynamics'
-INTERVAL = int(os.environ.get('INTERVAL', '1'))
+BROKER = os.environ.get("MQTT_BROKER_ADDR", "localhost")
+PORT = int(os.environ.get("MQTT_BROKER_PORT", "1883"))
+VEHICLE_ID = os.environ.get("VIN")
+TOPIC = f"vehicle/vehicle_dynamics"
+INTERVAL = int(os.environ.get("INTERVAL", "1"))
 # Create an MQTT client instance
 mqtt_client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 mqtt_client.connect(BROKER, PORT, 60)
+
 
 # Callback for receiving messages
 def callback(topic_name, msg, time):
@@ -53,6 +54,7 @@ def callback(topic_name, msg, time):
     except Exception as e:
         logger.error(f"Error: {e}")
 
+
 if __name__ == "__main__":
     logger.info("Starting vehicle state logger...")
 
@@ -64,10 +66,10 @@ if __name__ == "__main__":
 
     # Set the Callback
     sub.set_callback(callback)
-    
+
     # Just don't exit
     while ecal_core.ok():
         time.sleep(0.5)
-    
+
     # finalize eCAL API
     ecal_core.finalize()
