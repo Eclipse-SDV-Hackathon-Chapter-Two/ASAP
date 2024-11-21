@@ -49,8 +49,8 @@ def mps2kmh(vel_mps):
     vel_kmh = vel_mps*3.6
     return vel_kmh
 
-
-def ego_callback(topic_name, msg, time):
+# Callback for receiving vehicle dynamic messages
+def vehicle_dynamics_callback(topic_name, msg, time):
     try:
         json_msg = json.loads(msg)
         speed = json_msg["signals"]["speed"]
@@ -62,9 +62,8 @@ def ego_callback(topic_name, msg, time):
     except Exception as e:
         logger.error(f"Error: {e}")
 
-
-# Callback for receiving messages
-def speed_limit_callback(topic_name, msg, time):
+# Callback for receiving traffic sign detection messages
+def traffic_sign_detection_callback(topic_name, msg, time):
     try:
         json_msg = json.loads(msg)
         class_ids = json_msg["class_ids"]
@@ -122,13 +121,13 @@ if __name__ == "__main__":
     # Initialize SpeedLimitAssist
     speedLimitAssist = SpeedLimitAssist(0.0, 0.0, 0.0)
 
-    # Create a subscriber that listens on the "traffic_sign_detection"
+    # Create subscribers that listens on the "traffic_sign_detection" and "vehicle_dynamics"
     tsd_sub = StringSubscriber("traffic_sign_detection")
-    ego_sub = StringSubscriber("vehicle_dynamics")
+    vd_sub = StringSubscriber("vehicle_dynamics")
 
-    # Set the Callback
-    tsd_sub.set_callback(speed_limit_callback)
-    ego_sub.set_callback(ego_callback)
+    # Set the Callbacks
+    tsd_sub.set_callback(traffic_sign_detection_callback)
+    vd_sub.set_callback(vehicle_dynamics_callback)
     
     # Just don't exit
     while ecal_core.ok():
