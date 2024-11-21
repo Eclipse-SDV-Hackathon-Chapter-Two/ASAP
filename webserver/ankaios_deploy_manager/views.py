@@ -7,6 +7,7 @@ from ankaios_deploy_manager.mqtt.mqtt_handler import MqttHandler
 
 class UploadFileForm(forms.Form):
     file = forms.FileField()
+    target_vin = forms.CharField(label="Target VIN")
 
 def index(request):
     if request.method == "POST":
@@ -17,8 +18,10 @@ def index(request):
             print("Valid")
             file = request.FILES["file"]
             file.seek(0)
+            target_vin = form.cleaned_data['target_vin']
+            print(target_vin)
             yaml_content = file.read()
-            MqttHandler.deploy_yaml(yaml_content, [1,2])
+            MqttHandler.deploy_yaml(yaml_content, [target_vin])
             return HttpResponseRedirect("/")
     else:
         form = UploadFileForm()
