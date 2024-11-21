@@ -4,6 +4,9 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django import forms
 from ankaios_deploy_manager.mqtt.mqtt_handler import MqttHandler
+from logging import Logger
+
+logger = Logger(__name__)
 
 class UploadFileForm(forms.Form):
     file = forms.FileField()
@@ -11,10 +14,10 @@ class UploadFileForm(forms.Form):
 def index(request):
     if request.method == "POST":
         form = UploadFileForm(request.POST, request.FILES)
-        print("Request")
-        print(request)
+        logger.info("Request")
+        logger.info(request)
         if form.is_valid():
-            print("Valid")
+            logger.info("Valid")
             file = request.FILES["file"]
             file.seek(0)
             yaml_content = file.read()
@@ -22,8 +25,8 @@ def index(request):
             return HttpResponseRedirect("/")
     else:
         form = UploadFileForm()
-    print("Active Vehicle Dynamics")
-    print(MqttHandler.active_vehicle_dynamics)
+    logger.info("Active Vehicle Dynamics")
+    logger.info(MqttHandler.active_vehicle_dynamics)
     context = {
         "active_vehicle_dynamics": MqttHandler.active_vehicle_dynamics,
         "file_upload_form" : form
