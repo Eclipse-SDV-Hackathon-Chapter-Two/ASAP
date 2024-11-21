@@ -2,11 +2,11 @@ import paho.mqtt.client as mqtt
 from ankaios_deploy_manager import settings
 import json
 
-VEHICLE_DYNAMICS_TOPIC = 'vehicle/vehicle_dynamics/update_cluster'
+VEHICLE_DYNAMICS_TOPIC = 'vehicle/vehicle_dynamics'
 REMOVE_DATA_TOPIC = 'ankaios_deploy_manager/mqtt/remove_cluster'
 
 class MqttHandler():
-    active_clusters = []
+    active_vehicle_dynamics = {}
     client = None
 
     def on_connect(mqtt_client, userdata, flags, rc):
@@ -19,20 +19,27 @@ class MqttHandler():
 
     def on_message(mqtt_client, userdata, msg):
         if msg.topic == VEHICLE_DYNAMICS_TOPIC:
-            MqttHandler.on_update_data(msg)
+            MqttHandler.on_update_data(msg.payload)
         if msg.topic == REMOVE_DATA_TOPIC:
-            MqttHandler.on_remove_data(msg)
+            MqttHandler.on_remove_data(msg.payload)
 
     def on_update_data(data):
         print("on_update_data")
         print(data)
-        cluster_data = json.loads(data)[0]
 
-        for i in len(MqttHandler.active_clusters):
-            active_cluster = MqttHandler.active_clusters[i]
-            if active_cluster['id'] == cluster_data['id']:
-                active_cluster[i] = cluster_data
-                print(f"Updated id: {active_cluster['id']}")
+        # To test with windows mosquitto_pub calls
+        data = data.decode('ascii').replace("'", "\"")
+        print(data)
+        
+        vehicle_dynamics = json.loads(data)
+        vehicle_id = vehicle_dynamics['vehicle_id']
+
+        if not vehicle_id in MqttHandler.active_vehicle_dynamics:
+            MqttHandler.active_vehicle_dynamics[vehicle_id] = []
+
+        MqttHandler.active_vehicle_dynamics[vehicle_id].insert(0, vehicle_dynamics)
+
+        del MqttHandler.active_vehicle_dynamics[vehicle_id][100:]
         
     def on_remove_data(data):
         print("on_remove_data")

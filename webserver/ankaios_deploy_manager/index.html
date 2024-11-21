@@ -39,11 +39,6 @@ for the table -->
 					Cluster ID
 				</span> 
 				</th> 
-				<th data-field="name"> 
-				<span class="text-success"> 
-					Agent ID
-				</span> 
-				</th> 
 				<th data-field="date"> 
 				<span class="text-success"> 
 					Agent Name
@@ -65,33 +60,30 @@ for the table -->
 				</span> 
 				</th> 
 			</tr>
-			{% if ankaios_list %}
-				{% for cluster in ankaios_list %}
-					{% for agent in cluster.agents %}
-						{% for workload in agent.active_workloads %}
+			{% for vehicle_id,cluster_data_list in active_vehicle_dynamics.items %}
+				{% for agent_name,agent_data in cluster_data_list.0.workload_states.items %}
+					{% for workload_name,workload_data in agent_data.items %}
+						{% for workload_version,workload_version_data in workload_data.items %}
 						<tr>
-							<td>{{cluster.cluster_id}}</td>
-							<input type="hidden" name="cluster_id" value={{cluster.cluster_id}}/>
-							<td>{{agent.agent_id}}</td>
-							<input type="hidden" name="agent_id" value={{agent.agent_id}}/>
-							<td>{{agent.agent_name}}</td>
+							<td>{{vehicle_id}}</td>
+							<input type="hidden" name="vehicle_id" value={vehicle_id}}/>
+							<td>{{agent_name}}</td>
 							<input type="hidden" name="agent_name" value={{agent.agent_name}}/>
-							<td>{{workload.workload_name}}</td>
-							<input type="hidden" name="workload_name" value={{workload.workload_name}}/>
-							<td>{{workload.workload_version}}</td>
-							<input type="hidden" name="workload_version" value={{workload.workload_version}}/>
+							<td>{{workload_name}}</td>
+							<input type="hidden" name="workload_name" value={{workload_name}}/>
+							<td>{{workload_version}}</td>
+							<input type="hidden" name="workload_version" value={{workload_version}}/>
+							{% if forloop.parentloop.parentloop.first %}
+							<td>
+								<input type="checkbox" title="update" id=update_{{agent.agent_id}}_{{workload.workload_name}}/>
+							</td>
+							{% endif %}
+						</tr>
 						{% endfor %}
-						<td>
-							<input type="checkbox" title="update" id=update_{{agent.agent_id}}_{{workload.workload_name}}/>
-						</td>
-					</tr>
 					{% endfor %}
+				</tr>
 				{% endfor %}
-			{% else %}
-			<tr>
-				<p>No polls are available.</p>
-			</tr>
-			{% endif %}
+			{% endfor %}
 			</thead>
 		</table>
 		

@@ -3,44 +3,12 @@ from django.template import loader
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django import forms
-from ankaios_deploy_manager.mqtt import mqtt_handler
+from ankaios_deploy_manager.mqtt.mqtt_handler import MqttHandler
 
 class UploadFileForm(forms.Form):
     file = forms.FileField()
 
 def index(request):
-    ankaios_data = [
-        {
-            "cluster_id": 1,
-            "agents": [
-                {
-                    "agent_id": 1,
-                    "agent_name": "HPC1",
-                    "active_workloads": [
-                        {
-                            "workload_name": "myapp1",
-                            "workload_version": "1.44.4",
-                        },
-                        {
-                            "workload_name": "ankaios_deployment_manager_connector",
-                            "workload_version": "1.02.4",
-                        },
-                    ]
-                },
-                {
-                    "agent_id": 2,
-                    "agent_name": "HPC1",
-                    "active_workloads": [
-                        {
-                            "workload_name": "myapp2",
-                            "workload_version": "1.44.4",
-                        }
-                    ]
-                },
-            ]
-        }
-    ]
-
     if request.method == "POST":
         form = UploadFileForm(request.POST, request.FILES)
         print("Request")
@@ -50,13 +18,14 @@ def index(request):
             file = request.FILES["file"]
             file.seek(0)
             yaml_content = file.read()
-            mqtt_handler.MqttHandler.deploy_yaml(yaml_content, [1,2])
+            MqttHandler.deploy_yaml(yaml_content, [1,2])
             return HttpResponseRedirect("/")
     else:
         form = UploadFileForm()
-
+    print("Active Vehicle Dynamics")
+    print(MqttHandler.active_vehicle_dynamics)
     context = {
-        "ankaios_list": ankaios_data,
+        "active_vehicle_dynamics": MqttHandler.active_vehicle_dynamics,
         "file_upload_form" : form
     }
     return render(request, "ankaios_deploy_manager/index.html", context)
