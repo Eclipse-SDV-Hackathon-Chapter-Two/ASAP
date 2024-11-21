@@ -14,14 +14,12 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file ./.devcontainer/Dockerfile --tag shift2sdv:$(date +%s) --target dev
 
-    - name: Get Docker image tag
-      run: echo "IMAGE_TAG=$(date +%s)" >> $GITHUB_ENV
-
     - name: Run tests in Docker container
       run: |
         docker run --rm \
           --privileged \
           -v ${{ github.workspace }}:/workspaces/shift2sdv \
           -w /workspaces/shift2sdv \
-          shift2sdv:${{ env.IMAGE_TAG }} \
+          shift2sdv:${{ github.sha }} \
           pytest
+
