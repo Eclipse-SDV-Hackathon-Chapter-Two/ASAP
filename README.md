@@ -8,13 +8,13 @@ The ASAP shift to SDV project consists of 3 new Ankaios workloads and a webserve
 
 To orchestrate the workloads, we implemented a simple [webserver](webserver). A user can upload a manifest .yaml file through the web UI. Simultaneously, while eCal is providing data, the UI displays the vehicle information and Ankaios execution state.
 
+## Technologies used
+- [Ankaios](https://projects.eclipse.org/projects/automotive.ankaios)
+- [eCal](https://projects.eclipse.org/projects/automotive.ecal)
+- [Mosquitto](https://mosquitto.org/)
+- [MQTT Protocol](https://mqtt.org/)
+- [Django](https://www.djangoproject.com/)
+- [Azure Cloud](https://azure.microsoft.com/)
+
 ## Architecture
 ![Architecture](./project_architecture.drawio.svg)
-
-## Technologies used
-[Ankaios](https://projects.eclipse.org/projects/automotive.ankaios)
-[eCal](https://projects.eclipse.org/projects/automotive.ecal)
-[Mosquitto](https://mosquitto.org/)
-[MQTT Protocol](https://mqtt.org/)
-[Django](https://www.djangoproject.com/)
-[Azure Cloud](https://azure.microsoft.com/)
