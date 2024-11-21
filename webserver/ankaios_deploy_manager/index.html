@@ -11,19 +11,39 @@
 	into a bootstrap table 
 </title> 
 
-<!-- Include Bootstrap for styling -->
-<link rel="stylesheet"
-		href= 
-"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> 
+	<!-- Include Bootstrap for styling -->
+	<link rel="stylesheet"
+			href= 
+	"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> 
 
-<!-- Include the Bootstrap Table CSS 
-for the table -->
-<link rel="stylesheet"
-		href= 
-"https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css"> 
+	<!-- Include the Bootstrap Table CSS 
+	for the table -->
+	<link rel="stylesheet"
+			href= 
+	"https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script>
+		function MakeRequest(id)
+		{
+			$.ajax({
+				type: "GET",
+				url: "/",
+				dataType: 'html',
+				success: function(data) {
+					$('#dashboard').html(
+						$('<div />').html(data).find('#dashboard').html()
+					);
+				}
+			});
+		}
+
+		const interval = setInterval(function() {
+			MakeRequest();
+		}, 5000);
+	</script>
 </head> 
 <body> 
-
+	<div id="dashboard">
 		{% for vehicle_id,cluster_data_list in active_vehicle_dynamics.items %}
 			<div class="card-deck" style="margin: 10px;">
 				<div class="card">
@@ -61,7 +81,7 @@ for the table -->
 				</div>
 			</div>
 		{% endfor %}
-
+	</div>
 <div class="container"> 
 	<form method="POST" enctype="multipart/form-data" >
 		{% csrf_token %}
