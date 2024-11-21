@@ -13,6 +13,7 @@ To orchestrate the workloads, we implemented a simple [webserver](webserver). A 
 - [eCal](https://projects.eclipse.org/projects/automotive.ecal)
 - [Mosquitto](https://mosquitto.org/)
 - [MQTT Protocol](https://mqtt.org/)
+- [Podman](https://podman.io/)
 - [Django](https://www.djangoproject.com/)
 - [Azure Cloud](https://azure.microsoft.com/)
 
