@@ -14,7 +14,7 @@ podman build -t speed_limit_assist:latest .
 
 ## Running
 
-The Speed Limit Assist is automatically started by Ankaios as there is an entry for it in the [shift2sdv_manifest.yaml](shift2sdv_manifest.yaml).
+The Speed Limit Assist is automatically started by Ankaios as there is an entry for it in the [shift2sdv_SLA_manifest.yaml](shift2sdv_SLA_manifest.yaml). To use the correct manifest, you need to update the `start-shift2sdv`.
 
 In the test vehicle the Speed Limit Assist container image will be started and managed by Eclipse Ankaios.
 
