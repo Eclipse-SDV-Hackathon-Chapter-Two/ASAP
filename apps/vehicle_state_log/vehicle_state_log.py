@@ -26,7 +26,7 @@ logger.addHandler(stdout)
 logger.setLevel(logging.INFO)
 
 # Vehice dynamics handling topic
-BROKER = "20.164.18.107"
+BROKER = os.environ.get('MQTT_BROKER_ADDR', 'localhost')
 PORT = int(os.environ.get('MQTT_BROKER_PORT', '1883'))
 VEHICLE_ID = os.environ.get('VIN')
 TOPIC = f'vehicle/vehicle_dynamics'
