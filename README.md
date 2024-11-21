@@ -10,4 +10,3 @@ To orchestrate the workloads, we implemented a simple [webserver](webserver). A 
 
 Architecture:
 ![Architecture](./project_architecture.drawio.svg)
-<img src="./project_architecture.drawio.svg">
