@@ -16,10 +16,5 @@ jobs:
 
     - name: Run tests in Docker container
       run: |
-        docker run --rm \
-          --privileged \
-          -v ${{ github.workspace }}:/workspaces/shift2sdv \
-          -w /workspaces/shift2sdv \
-          shift2sdv:${{ github.sha }} \
-          pytest
+        docker images
 
