@@ -24,13 +24,14 @@ logger.addHandler(stdout)
 logger.setLevel(logging.INFO)
 
 class SpeedLimitAssist:
+    # Initialize SpeedLimitAssist
     def __init__(self, limit, limit_confidence, vel_mps):
         self.limit = limit
         self.limit_confidence = limit_confidence
         self.vel_mps = vel_mps
     
+    # Checks if the driver is exceeding the speed limit and prints warning
     def check_speed_limit(self):
-        '''Checks if driver is exceeding the speed limit'''
         if self.vel_mps > 0.0 and self.limit > 0.0:
             exceeded_speed = self.vel_mps - self.limit
             if exceeded_speed > 0.99:
