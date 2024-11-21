@@ -124,7 +124,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # MQTT
-MQTT_SERVER = os.environ.get('MQTT_BROKER_ADDR', 'localhost')
+MQTT_SERVER = os.environ.get('MQTT_BROKER_ADDR', '20.164.18.107')
 MQTT_PORT = int(os.environ.get('MQTT_BROKER_PORT', '1883'))
 MQTT_KEEPALIVE = 60
 MQTT_USER = ''
