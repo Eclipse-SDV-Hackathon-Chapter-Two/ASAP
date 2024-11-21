@@ -39,7 +39,6 @@ with Ankaios() as ankaios:
         # Callback when the client receives a CONNACK response from the MQTT server
     def on_connect(client, userdata, flags, reason_code, properties):
         client.subscribe(f"{BASE_TOPIC}/manifest/apply/req")
-        client.subscribe(f"{BASE_TOPIC}/error_speed")
 
     # Callback when a PUBLISH message is received from the MQTT server
     def on_manifest_update(client, userdata, msg):
@@ -48,13 +47,7 @@ with Ankaios() as ankaios:
             # Handle request for applying a manifest
             if msg.topic == f"{BASE_TOPIC}/manifest/apply/req":
                 manifest = Manifest.from_string(str(msg.payload.decode()))
-                ret = ankaios.apply_manifest(manifest)
-                if ret is not None:
-                    client.publish(f"{BASE_TOPIC}/manifest/apply/resp", json.dumps(ret.to_dict()))
-            # Handle vehicle speed error requests
-            elif msg.topic == f"{BASE_TOPIC}/error_speed":
-                speed = str(msg.payload.decode())
-                logger.info(f"Received error speed: {speed}")
+                ankaios.apply_manifest(manifest)
         except Exception as e:
             logger.error(f"Error processing message: {e}")
 
