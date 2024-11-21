@@ -9,11 +9,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v4 
 
-    - name: Build the Docker image
-      run: docker build . --file ./.devcontainer/Dockerfile --tag shift2sdv:$(date +%s) --target dev
-
-    - name: Check images
+    - name: Build and Run Docker container with pytest
       run: |
+        # Build the Docker image
+        docker build . --file ./.devcontainer/Dockerfile --tag shift2sdv:latest --target dev
         docker images        
+
+        # Run pytest in the built container
+        docker run --rm shift2sdv:latest pytest
