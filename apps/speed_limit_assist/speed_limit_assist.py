@@ -17,6 +17,12 @@ import sys, time, json, logging
 import ecal.core.core as ecal_core
 from ecal.core.subscriber import StringSubscriber
 
+logger = logging.getLogger("speed_limit_assist")
+stdout = logging.StreamHandler(stream=sys.stdout)
+stdout.setLevel(logging.INFO)
+logger.addHandler(stdout)
+logger.setLevel(logging.INFO)
+
 class SpeedLimitAssist:
     def __init__(self, limit, limit_confidence, vel_mps):
         self.limit = limit
@@ -33,12 +39,6 @@ class SpeedLimitAssist:
                 return exceeded_speed
         else:
             return 0.0
-
-logger = logging.getLogger("speed_limit_assist")
-stdout = logging.StreamHandler(stream=sys.stdout)
-stdout.setLevel(logging.INFO)
-logger.addHandler(stdout)
-logger.setLevel(logging.INFO)
 
 
 def kmh2mps(vel_kmh):
