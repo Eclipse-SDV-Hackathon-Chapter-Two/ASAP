@@ -27,12 +27,10 @@ logger.addHandler(stdout)
 logger.setLevel(logging.INFO)
 
 # Get config over environment variables
-BROKER = os.environ.get('MQTT_BROKER_ADDR', 'localhost')
+BROKER = "20.164.18.107"
 PORT = int(os.environ.get('MQTT_BROKER_PORT', '1883'))
 VEHICLE_ID = os.environ.get('VIN')
 BASE_TOPIC = f"vehicle/{VEHICLE_ID}"
-
-logger.info("foobar")
 
 # Create a new Ankaios object.
 # The connection to the control interface is automatically done at this step.

@@ -55,3 +55,7 @@ RUN PIP_BREAK_SYSTEM_PACKAGES=1 pip install \
     paho-mqtt \
     ankaios-sdk \
     django
+
+# Packages for development 
+RUN PIP_BREAK_SYSTEM_PACKAGES=1 pip install \
+    pytest 
