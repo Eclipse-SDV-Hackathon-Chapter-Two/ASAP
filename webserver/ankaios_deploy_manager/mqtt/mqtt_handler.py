@@ -2,10 +2,7 @@ import paho.mqtt.client as mqtt
 from ankaios_deploy_manager import settings
 import json
 
-BASE_TOPIC = f"vehicle/1"
-
-MANIFEST_APPLY_TOPIC = f"{BASE_TOPIC}/manifest/apply/req"
-UPDATE_DATA_TOPIC = 'ankaios_deploy_manager/mqtt/update_cluster'
+VEHICLE_DYNAMICS_TOPIC = 'vehicle/vehicle_dynamics/update_cluster'
 REMOVE_DATA_TOPIC = 'ankaios_deploy_manager/mqtt/remove_cluster'
 
 class MqttHandler():
@@ -15,14 +12,13 @@ class MqttHandler():
     def on_connect(mqtt_client, userdata, flags, rc):
         if rc == 0:
             print('Connected successfully')
-            mqtt_client.subscribe(MANIFEST_APPLY_TOPIC)
-            mqtt_client.subscribe(UPDATE_DATA_TOPIC)
+            mqtt_client.subscribe(VEHICLE_DYNAMICS_TOPIC)
             mqtt_client.subscribe(REMOVE_DATA_TOPIC)
         else:
             print('Bad connection. Code:', rc)
 
     def on_message(mqtt_client, userdata, msg):
-        if msg.topic == UPDATE_DATA_TOPIC:
+        if msg.topic == VEHICLE_DYNAMICS_TOPIC:
             MqttHandler.on_update_data(msg)
         if msg.topic == REMOVE_DATA_TOPIC:
             MqttHandler.on_remove_data(msg)
@@ -31,6 +27,7 @@ class MqttHandler():
         print("on_update_data")
         print(data)
         cluster_data = json.loads(data)[0]
+
         for i in len(MqttHandler.active_clusters):
             active_cluster = MqttHandler.active_clusters[i]
             if active_cluster['id'] == cluster_data['id']:
@@ -62,5 +59,6 @@ class MqttHandler():
             keepalive=settings.MQTT_KEEPALIVE
         )
         MqttHandler.client.loop_start()
-    def deploy_yaml(yaml):
-        MqttHandler.client.publish(MANIFEST_APPLY_TOPIC, yaml)
+    def deploy_yaml(yaml, vehicle_ids):
+        for vehicle_id in vehicle_ids:
+            MqttHandler.client.publish(f"vehicle/{vehicle_id}/manifest/apply/req", yaml)
