@@ -13,6 +13,6 @@ COPY ecal.ini /etc/ecal/
 COPY requirements.txt ./
 RUN pip install --break-system-packages --no-cache-dir -r requirements.txt
 
-COPY example_app.py ./
+COPY vehicle_state_log.py ./
 
-CMD [ "python3", "-u", "./example_app.py" ]
+CMD [ "python3", "-u", "./vehicle_state_log.py" ]
