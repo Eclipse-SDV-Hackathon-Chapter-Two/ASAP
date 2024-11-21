@@ -12,13 +12,11 @@
 
 # SPDX-License-Identifier: Apache-2.0
 
-from ankaios_sdk import Workload, Ankaios, WorkloadStateEnum, WorkloadSubStateEnum, AnkaiosLogLevel, Manifest, Request, CompleteState
+from ankaios_sdk import Ankaios, Manifest
 import paho.mqtt.client as mqtt
-import json
 import os
 import logging
 import sys
-import time
 
 logger = logging.getLogger("fleet_manager")
 stdout = logging.StreamHandler(stream=sys.stdout)
@@ -36,25 +34,16 @@ BASE_TOPIC = f"vehicle/{VEHICLE_ID}"
 # The connection to the control interface is automatically done at this step.
 with Ankaios() as ankaios:
 
-        # Callback when the client receives a CONNACK response from the MQTT server
     def on_connect(client, userdata, flags, reason_code, properties):
         client.subscribe(f"{BASE_TOPIC}/manifest/apply/req")
-        client.subscribe(f"{BASE_TOPIC}/error_speed")
 
-    # Callback when a PUBLISH message is received from the MQTT server
     def on_manifest_update(client, userdata, msg):
         try:
             logger.info(f"Received message on topic {msg.topic} with payload {msg.payload.decode()}")
             # Handle request for applying a manifest
             if msg.topic == f"{BASE_TOPIC}/manifest/apply/req":
                 manifest = Manifest.from_string(str(msg.payload.decode()))
-                ret = ankaios.apply_manifest(manifest)
-                if ret is not None:
-                    client.publish(f"{BASE_TOPIC}/manifest/apply/resp", json.dumps(ret.to_dict()))
-            # Handle vehicle speed error requests
-            elif msg.topic == f"{BASE_TOPIC}/error_speed":
-                speed = str(msg.payload.decode())
-                logger.info(f"Received error speed: {speed}")
+                ankaios.apply_manifest(manifest)
         except Exception as e:
             logger.error(f"Error processing message: {e}")
 

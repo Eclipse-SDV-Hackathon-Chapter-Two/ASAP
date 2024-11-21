@@ -11,99 +11,83 @@
 	into a bootstrap table 
 </title> 
 
-<!-- Include Bootstrap for styling -->
-<link rel="stylesheet"
-		href= 
-"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> 
+	<!-- Include Bootstrap for styling -->
+	<link rel="stylesheet"
+			href= 
+	"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"> 
 
-<!-- Include the Bootstrap Table CSS 
-for the table -->
-<link rel="stylesheet"
-		href= 
-"https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css"> 
+	<!-- Include the Bootstrap Table CSS 
+	for the table -->
+	<link rel="stylesheet"
+			href= 
+	"https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script>
+		function MakeRequest(id)
+		{
+			$.ajax({
+				type: "GET",
+				url: "/",
+				dataType: 'html',
+				success: function(data) {
+					$('#dashboard').html(
+						$('<div />').html(data).find('#dashboard').html()
+					);
+				}
+			});
+		}
+
+		const interval = setInterval(function() {
+			MakeRequest();
+		}, 5000);
+	</script>
 </head> 
 <body> 
-<div class="container"> 
-	<h1 class="text text-success text-center "> 
-	Ankaios Cluster 
-	</h1> 
-	<h6 class="text text-success text-center"> 
-	Overview of Ankaios Containers
-	</h6>
-	<form method="POST" enctype="multipart/form-data" >
-		<table class="table-striped border-success" style="width:100%"> 
-			<thead> 
-			<tr> 
-				<th data-field="id"> 
-				<span class="text-success"> 
-					Cluster ID
-				</span> 
-				</th> 
-				<th data-field="date"> 
-				<span class="text-success"> 
-					Agent Name
-				</span> 
-				</th> 
-				<th data-field="date"> 
-				<span class="text-success"> 
-					Workload Name
-				</span> 
-				</th> 
-				<th data-field="date"> 
-				<span class="text-success"> 
-					Workload Version
-				</span> 
-				</th> 
-				<th data-field="date"> 
-				<span class="text-success"> 
-					Update Cluster
-				</span> 
-				</th> 
-			</tr>
-			{% for vehicle_id,cluster_data_list in active_vehicle_dynamics.items %}
-				{% for agent_name,agent_data in cluster_data_list.0.workload_states.items %}
-					{% for workload_name,workload_data in agent_data.items %}
-						{% for workload_version,workload_version_data in workload_data.items %}
-						<tr>
-							<td>{{vehicle_id}}</td>
-							<input type="hidden" name="vehicle_id" value={vehicle_id}}/>
-							<td>{{agent_name}}</td>
-							<input type="hidden" name="agent_name" value={{agent.agent_name}}/>
-							<td>{{workload_name}}</td>
-							<input type="hidden" name="workload_name" value={{workload_name}}/>
-							<td>{{workload_version}}</td>
-							<input type="hidden" name="workload_version" value={{workload_version}}/>
-							{% if forloop.parentloop.parentloop.first %}
-							<td>
-								<input type="checkbox" title="update" id=update_{{agent.agent_id}}_{{workload.workload_name}}/>
-							</td>
-							{% endif %}
-						</tr>
+	<div id="dashboard">
+		{% for vehicle_id,cluster_data_list in active_vehicle_dynamics.items %}
+			<div class="card-deck" style="margin: 10px;">
+				<div class="card">
+					<h5 class="card-header">VIN: {{vehicle_id}}</h5>
+					<div class="card-group" style="margin: 10px;">
+						{% for agent_name,agent_data in cluster_data_list.0.workload_states.items %}
+							<div class="card">
+								<h5 class="card-header">{{agent_name}}</h5>
+								<div class="card-body" style="margin: 5px;">
+									{% for workload_name,workload_data in agent_data.items %}
+										{% for workload_version,workload_version_data in workload_data.items %}
+											<div class="card" style="margin: 5px;">
+												<div class="card-header">Workload</div>
+												<div class="card-body">
+													<h5 class="card-title">{{workload_name}}</h5>
+													<p class="card-text">Version: {{workload_version}}</p>
+													<p class="card-text">State: {{workload_version_data.state}}</p>
+													<p class="card-text">Substate: {{workload_version_data.substate}}</p>
+												</div>
+											</div>
+										{% endfor %}
+									{% endfor %}
+								</div>
+							</div>
 						{% endfor %}
-					{% endfor %}
-				</tr>
-				{% endfor %}
-			{% endfor %}
-			</thead>
-		</table>
-		
+						<div>
+							<div class="card-body">
+								<p class="card-text">Speed: {{cluster_data_list.0.signals.speed}}</p>
+								<p class="card-text">Displayed speed: {{cluster_data_list.0.signals.speedDisplayed}}</p>
+								<p class="card-text">Steering speed: {{cluster_data_list.0.signals.steeringWheelAngleSpeed}}</p>
+								<p class="card-text">Steer torque: {{cluster_data_list.0.signals.drvSteerTorque}}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+	</div>
+<div class="container"> 
+	<form method="POST" enctype="multipart/form-data" >
 		{% csrf_token %}
     	{{file_upload_form.as_p}}
 		<button type="submit" value="Submit">Submit</button>
 	</form>
 </div> 
-<script src= 
-"https://code.jquery.com/jquery-3.3.1.min.js"> 
-  </script> 
-  <script src= 
-"https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"> 
-  </script> 
-  <script src= 
-"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"> 
-  </script> 
-<script src= 
-"https://unpkg.com/bootstrap-table@1.16.0/dist/bootstrap-table.min.js"> 
-  </script>
-  
 </body> 
 </html>

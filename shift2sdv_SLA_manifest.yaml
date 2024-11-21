@@ -1,0 +1,9 @@
+apiVersion: v0.1
+workloads:
+  speed_limit_assist:
+    runtime: podman
+    agent: hpc2
+    restartPolicy: NEVER
+    runtimeConfig: |
+      image: ghcr.io/eclipse-sdv-hackathon-chapter-two/shift2sdv/speed_limit_assist:latest
+      commandOptions: [ "--net=host", "--ipc=host"]
