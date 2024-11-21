@@ -42,12 +42,10 @@ ecal_play -m measurements/<recording_folder>
 
 Start the Speed Limit Assist inside the devcontainer as shown above.
 
-You should see logs of the JSON data received, and in the web browser the tachometer should show some speed values.
-
-For debugging reasons you can start the eCAL Monitor terminal UI in a separate terminal window by running:
+For debugging reasons you can see the logs by calling:
 
 ```shell
-ecal_mon_tui
+ank-logs speed_limit_assist
 ```
 
-This lists all eCAL topics with their contents and meta information the host or container can see.
+The warnings will be logged and the exceeded velocity will be displayed.
