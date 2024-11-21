@@ -31,7 +31,7 @@ workloads:
             - "*"
     restartPolicy: NEVER
     runtimeConfig: |
-      image: ghcr.io/eclipse-sdv-hackathon-chapter-two/shift2sdv/symphony_provider:latest
+      image: ghcr.io/eclipse-sdv-hackathon-chapter-two/shift2sdv/fleet_manager:latest
       commandOptions: [ "--net=host", "-e", "VIN=1"]
   vehicle_state_log:
     runtime: podman
@@ -44,7 +44,7 @@ workloads:
             - "*"
     restartPolicy: NEVER
     runtimeConfig: |
-      image: ghcr.io/eclipse-sdv-hackathon-chapter-two/shift2sdv/example_app:latest
+      image: ghcr.io/eclipse-sdv-hackathon-chapter-two/shift2sdv/vehicle_state_log:latest
       commandOptions: [ "--net=host", "-e", "VIN=1", "--ipc=host"]
   web_ivi:
     runtime: podman
