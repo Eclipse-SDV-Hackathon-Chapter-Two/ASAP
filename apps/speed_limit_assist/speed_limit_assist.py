@@ -19,6 +19,7 @@ import time
 
 import ecal.core.core as ecal_core
 from ecal.core.subscriber import StringSubscriber
+from ecal.core.publisher import StringPublisher
 
 logger = logging.getLogger("speed_limit_assist")
 stdout = logging.StreamHandler(stream=sys.stdout)
@@ -68,8 +69,6 @@ def vehicle_dynamics_callback(topic_name, msg, time):
         json_msg = json.loads(msg)
         speed = json_msg["signals"]["speed"]
         speedLimitAssist.vel_mps = speed
-        if speedLimitAssist.limit > 0.0:
-            speedLimitAssist.check_speed_limit()
     except json.JSONDecodeError:
         logger.error(f"Error: Could not decode message: '{msg}'")
     except Exception as e:
@@ -144,8 +143,16 @@ if __name__ == "__main__":
     tsd_sub.set_callback(traffic_sign_detection_callback)
     vd_sub.set_callback(vehicle_dynamics_callback)
 
+
+    sla_pub = StringPublisher("sla_topic")
+    
+    if speedLimitAssist.limit > 0.0:
+        exceededSpeed = speedLimitAssist.check_speed_limit()
+
     # Just don't exit
     while ecal_core.ok():
+        if exceededSpeed > 0:
+            sla_pub("Warning: Youre to fast!")
         time.sleep(0.5)
 
     # finalize eCAL API
