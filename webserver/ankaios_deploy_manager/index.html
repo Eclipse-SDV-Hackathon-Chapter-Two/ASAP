@@ -39,7 +39,9 @@ for the table -->
 												<div class="card-header">Workload</div>
 												<div class="card-body">
 													<h5 class="card-title">{{workload_name}}</h5>
-													<p class="card-text">{{workload_version}}</p>
+													<p class="card-text">Version: {{workload_version}}</p>
+													<p class="card-text">State: {{workload_version_data.state}}</p>
+													<p class="card-text">Substate: {{workload_version_data.substate}}</p>
 												</div>
 											</div>
 										{% endfor %}
@@ -47,6 +49,14 @@ for the table -->
 								</div>
 							</div>
 						{% endfor %}
+						<div>
+							<div class="card-body">
+								<p class="card-text">Speed: {{cluster_data_list.0.signals.speed}}</p>
+								<p class="card-text">Displayed speed: {{cluster_data_list.0.signals.speedDisplayed}}</p>
+								<p class="card-text">Steering speed: {{cluster_data_list.0.signals.steeringWheelAngleSpeed}}</p>
+								<p class="card-text">Steer torque: {{cluster_data_list.0.signals.drvSteerTorque}}</p>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
