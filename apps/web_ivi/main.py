@@ -1,18 +1,18 @@
-from fastapi import FastAPI
-from fastapi.responses import FileResponse, HTMLResponse, StreamingResponse
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
-from uvicorn import run
-import sys
-from asyncio import sleep
-from queue import Queue
-import threading
 import logging
 import signal
+import sys
+import threading
+from asyncio import sleep
 from contextlib import asynccontextmanager
+from queue import Queue
 
 import ecal.core.core as ecal_core
 from ecal.core.subscriber import StringSubscriber
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, HTMLResponse, StreamingResponse
+from fastapi.staticfiles import StaticFiles
+from uvicorn import run
 
 # Set up logging
 logger = logging.getLogger(__name__)

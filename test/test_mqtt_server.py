@@ -1,6 +1,7 @@
-import pytest
-import paho.mqtt.client as mqtt
 from unittest import TestCase
+
+import paho.mqtt.client as mqtt
+import pytest
 
 
 class TestMqttBroker(TestCase):

@@ -15,9 +15,9 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+from ankaios_deploy_manager.mqtt import mqtt_handler
 from django.contrib import admin
 from django.urls import path
-from ankaios_deploy_manager.mqtt import mqtt_handler
 
 from . import views
 

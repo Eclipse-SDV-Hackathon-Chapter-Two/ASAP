@@ -1,6 +1,7 @@
+import json
+
 import paho.mqtt.client as mqtt
 from ankaios_deploy_manager import settings
-import json
 
 VEHICLE_DYNAMICS_TOPIC = "vehicle/vehicle_dynamics"
 REMOVE_DATA_TOPIC = "ankaios_deploy_manager/mqtt/remove_cluster"

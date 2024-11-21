@@ -1,9 +1,8 @@
-from django.http import HttpResponse
-from django.template import loader
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
-from django import forms
 from ankaios_deploy_manager.mqtt.mqtt_handler import MqttHandler
+from django import forms
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render
+from django.template import loader
 
 
 class UploadFileForm(forms.Form):

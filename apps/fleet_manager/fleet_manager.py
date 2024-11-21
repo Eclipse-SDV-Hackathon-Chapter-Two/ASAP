@@ -12,11 +12,12 @@
 
 # SPDX-License-Identifier: Apache-2.0
 
-from ankaios_sdk import Ankaios, Manifest
-import paho.mqtt.client as mqtt
-import os
 import logging
+import os
 import sys
+
+import paho.mqtt.client as mqtt
+from ankaios_sdk import Ankaios, Manifest
 
 logger = logging.getLogger("fleet_manager")
 stdout = logging.StreamHandler(stream=sys.stdout)

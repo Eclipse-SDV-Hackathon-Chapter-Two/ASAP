@@ -12,7 +12,10 @@
 
 # SPDX-License-Identifier: Apache-2.0
 
-import sys, time, json, logging
+import json
+import logging
+import sys
+import time
 
 import ecal.core.core as ecal_core
 from ecal.core.subscriber import StringSubscriber

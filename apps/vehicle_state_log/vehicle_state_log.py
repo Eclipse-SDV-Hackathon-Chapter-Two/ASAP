@@ -12,11 +12,15 @@
 
 # SPDX-License-Identifier: Apache-2.0
 
-import sys, time, json, logging, os
+import json
+import logging
+import os
+import sys
+import time
 
-from ankaios_sdk import Ankaios
 import ecal.core.core as ecal_core
 import paho.mqtt.client as mqtt
+from ankaios_sdk import Ankaios
 from ecal.core.subscriber import StringSubscriber
 
 logger = logging.getLogger("vehicle_state_log")
