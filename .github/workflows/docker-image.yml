@@ -5,24 +5,6 @@ on:
   workflow_dispatch:
 
 jobs:
-
-  build:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file ./.devcontainer/Dockerfile --tag ota:$(date +%s)
-
-
-name: Docker Image CI
-
-on:
-  push:
-  workflow_dispatch:
-
-jobs:
   build:
     runs-on: ubuntu-latest
 
