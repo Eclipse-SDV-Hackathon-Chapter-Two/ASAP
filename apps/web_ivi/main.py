@@ -117,6 +117,51 @@ async def vehicle_dynamics():
         vehicle_dynamics_generator(), media_type="text/event-stream"
     )
 
+@app.get("/sla")
+async def sla():
+    """
+    Asynchronous function to handle vehicle dynamics data streaming to the client browser.
+
+    This function initializes the eCAL API, subscribes to the "vehicle_dynamics" topic,
+    and sets a callback to handle incoming messages. It uses an asynchronous generator
+    to yield vehicle dynamics data as server-sent events (SSE).
+
+    Returns:
+        StreamingResponse: A streaming response with vehicle dynamics data in SSE format.
+    """
+
+    async def sla_generator():
+        sla_queue = Queue()  # Already synchronized queue
+
+        # Define an ecal callback triggered when receiving data through the ecal topic
+        def callback_sla(_topic_name, msg, _time):
+            sla_queue.put(msg)
+
+        # Initialize ecal
+        ecal_core.initialize(sys.argv, "WebIVI SLA")
+
+        # Subscribe to the vehicle_dynamics topic receiving json messages
+        sub = StringSubscriber("sla")
+
+        # Set the Callback
+        sub.set_callback(callback_sla)
+
+        while ecal_core.ok() and not stop_server_side_event.is_set():
+            if not sla_queue.empty():
+                sla_data = sla_queue.get()
+                logger.info(sla_data)
+                sla_queue.task_done()
+                sla_queue = Queue()
+                yield f"event: sla\ndata: {sla_data}\n\n"
+            await sleep(0.1)
+
+        # Finalize eCAL API
+        ecal_core.finalize()
+
+    return StreamingResponse(
+        sla_generator(), media_type="text/event-stream"
+    )
+
 
 if __name__ == "__main__":
     run(app, host="0.0.0.0", port=5500)

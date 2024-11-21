@@ -144,7 +144,7 @@ if __name__ == "__main__":
     vd_sub.set_callback(vehicle_dynamics_callback)
 
 
-    sla_pub = StringPublisher("sla_topic")
+    sla_pub = StringPublisher("sla")
     
     if speedLimitAssist.limit > 0.0:
         exceededSpeed = speedLimitAssist.check_speed_limit()
@@ -152,7 +152,9 @@ if __name__ == "__main__":
     # Just don't exit
     while ecal_core.ok():
         if exceededSpeed > 0:
-            sla_pub("Warning: Youre to fast!")
+            sla_pub("Warning: Too fast!")
+        else:
+            sla_pub("")
         time.sleep(0.5)
 
     # finalize eCAL API

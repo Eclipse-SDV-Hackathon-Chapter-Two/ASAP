@@ -45,6 +45,14 @@ function updateSpeedAndTorque(speed_km_h) {
     speedValue.textContent = speed_km_h;
 }
 
+/* update the sla */
+function updateSla(sla_status) {
+    // update the sla value
+    let slaValue = document.getElementById("sla-value");
+
+    slaValue.textContent = sla_status;
+}
+
 // read from server-side event
 const eventSource = new EventSource("/vehicle-dynamics");
 
@@ -66,4 +74,27 @@ eventSource.addEventListener("vehicle-dynamics", function (event) {
 eventSource.onerror = function (event) {
     console.log("Error: " + event);
     eventSource.close();
+}
+
+// sla optional addon module
+const eventSourceSla = new EventSource("/sla");
+
+eventSourceSla.onopen = function (_event) {
+    console.log("Connection to /sla opened");
+}
+
+// add event listener for the event
+eventSourceSla.addEventListener("sla", function (event) {
+    let raw_data = event.data;
+    let sla = JSON.parse(raw_data);
+    console.log(sla);
+    let sla_status = sla.status
+    console.log("Received sla: ", sla_status);
+    updateSla(sla_status);
+});
+
+// close the connection on error
+eventSourceSla.onerror = function (event) {
+    console.log("Error: " + event);
+    eventSourceSla.close();
 }
