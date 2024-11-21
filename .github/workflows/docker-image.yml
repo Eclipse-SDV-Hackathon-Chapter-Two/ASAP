@@ -16,5 +16,8 @@ jobs:
 
     - name: Run tests in Docker container
       run: |
-        # Run pytest inside the Docker container
-        docker run --rm shift2sdv:$(date +%s) pytest
+        # Get the tag from the build step dynamically
+        IMAGE_TAG="shift2sdv:$(date +%s)"
+        
+        # Run pytest inside the Docker container using the local image
+        docker run --rm $IMAGE_TAG pytest
