@@ -1,0 +1,18 @@
+name: Docker Image CI
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4 
+
+    - name: Build and Run Docker container with pytest
+      run: |
+        # Build the Docker image
+        docker build . --file ./.devcontainer/Dockerfile --tag shift2sdv:latest --target dev
+        docker images        
