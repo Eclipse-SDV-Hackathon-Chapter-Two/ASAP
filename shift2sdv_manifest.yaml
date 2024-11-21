@@ -32,7 +32,7 @@ workloads:
     restartPolicy: NEVER
     runtimeConfig: |
       image: ghcr.io/eclipse-sdv-hackathon-chapter-two/shift2sdv/fleet_manager:latest
-      commandOptions: [ "--net=host", "-e", "VIN=1"]
+      commandOptions: [ "--net=host","-p", "1883:1883", "-e", "VIN=1", "-e", "MQTT_BROKER_ADDR=20.164.18.107"]
   vehicle_state_log:
     runtime: podman
     agent: hpc2
@@ -45,7 +45,7 @@ workloads:
     restartPolicy: NEVER
     runtimeConfig: |
       image: ghcr.io/eclipse-sdv-hackathon-chapter-two/shift2sdv/vehicle_state_log:latest
-      commandOptions: [ "--net=host", "-e", "VIN=1", "--ipc=host"]
+      commandOptions: [ "--net=host","-p","1883:1883", "-e", "VIN=1", "-e", "MQTT_BROKER_ADDR=20.164.18.107", "--ipc=host"]
   speed_limit_assist:
     runtime: podman
     agent: hpc2
