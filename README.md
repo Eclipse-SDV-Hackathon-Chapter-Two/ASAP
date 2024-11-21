@@ -8,6 +8,17 @@ The ASAP shift to SDV project consists of 3 new Ankaios workloads and a webserve
 
 To orchestrate the workloads, we implemented a simple [webserver](webserver). A user can upload a manifest .yaml file through the web UI. Simultaneously, while eCal is providing data, the UI displays the vehicle information and Ankaios execution state.
 
+## How to get this to run
+
+1. start dev container
+
+Ideally in separate terminal instances inside your devcontainer:
+
+2. 'restart-shift2sdv'
+3. 'cd webserver && python3 manage.py runserver' 
+4. 'ecal_play -m measurements/2024-11-19_15-45-14.870_measurement/'
+   1. or wherever you have demo measurement data to play with eCal..
+
 ## Technologies used
 - [Ankaios](https://projects.eclipse.org/projects/automotive.ankaios)
 - [eCal](https://projects.eclipse.org/projects/automotive.ecal)
