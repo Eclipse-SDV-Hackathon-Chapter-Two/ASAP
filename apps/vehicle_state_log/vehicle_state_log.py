@@ -29,7 +29,7 @@ logger.setLevel(logging.INFO)
 BROKER = os.environ.get('MQTT_BROKER_ADDR', 'localhost')
 PORT = int(os.environ.get('MQTT_BROKER_PORT', '1883'))
 VEHICLE_ID = os.environ.get('VIN')
-TOPIC = f'vehicle/{VEHICLE_ID}/vehicle_dynamics'
+TOPIC = f'vehicle/vehicle_dynamics'
 INTERVAL = int(os.environ.get('INTERVAL', '1'))
 # Create an MQTT client instance
 mqtt_client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
@@ -44,6 +44,7 @@ def callback(topic_name, msg, time):
         with Ankaios() as ankaios:
             state = ankaios.get_state(field_masks=["workloadStates"])
             vehicle_dynamics["workload_states"] = state.to_dict()["workload_states"]
+            vehicle_dynamics["vehicle_id"] = VEHICLE_ID
 
             logger.info(f"Received: {vehicle_dynamics}")
             mqtt_client.publish(TOPIC, str(vehicle_dynamics))
