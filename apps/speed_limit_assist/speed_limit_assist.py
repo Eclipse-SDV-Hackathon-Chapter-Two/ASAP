@@ -12,7 +12,10 @@
 
 # SPDX-License-Identifier: Apache-2.0
 
-import sys, time, json, logging
+import json
+import logging
+import sys
+import time
 
 import ecal.core.core as ecal_core
 from ecal.core.subscriber import StringSubscriber
@@ -23,19 +26,26 @@ stdout.setLevel(logging.INFO)
 logger.addHandler(stdout)
 logger.setLevel(logging.INFO)
 
+
 class SpeedLimitAssist:
     # Initialize SpeedLimitAssist
     def __init__(self, limit, limit_confidence, vel_mps):
         self.limit = limit
         self.limit_confidence = limit_confidence
         self.vel_mps = vel_mps
-    
+
     # Checks if the driver is exceeding the speed limit and prints warning
     def check_speed_limit(self):
         if self.vel_mps > 0.0 and self.limit > 0.0:
             exceeded_speed = self.vel_mps - self.limit
             if exceeded_speed > 0.99:
-                warning = "You are exceeding the current speed limit: " + str(int(mps2kmh(self.limit))) + " km/h by " + str(int(mps2kmh(exceeded_speed))) +  " km/h"
+                warning = (
+                    "You are exceeding the current speed limit: "
+                    + str(int(mps2kmh(self.limit)))
+                    + " km/h by "
+                    + str(int(mps2kmh(exceeded_speed)))
+                    + " km/h"
+                )
                 logger.warning(warning)
                 return exceeded_speed
         else:
@@ -43,12 +53,14 @@ class SpeedLimitAssist:
 
 
 def kmh2mps(vel_kmh):
-    vel_mps = vel_kmh/3.6
+    vel_mps = vel_kmh / 3.6
     return vel_mps
 
+
 def mps2kmh(vel_mps):
-    vel_kmh = vel_mps*3.6
+    vel_kmh = vel_mps * 3.6
     return vel_kmh
+
 
 # Callback for receiving vehicle dynamic messages
 def vehicle_dynamics_callback(topic_name, msg, time):
@@ -63,13 +75,14 @@ def vehicle_dynamics_callback(topic_name, msg, time):
     except Exception as e:
         logger.error(f"Error: {e}")
 
+
 # Callback for receiving traffic sign detection messages
 def traffic_sign_detection_callback(topic_name, msg, time):
     try:
         json_msg = json.loads(msg)
         class_ids = json_msg["class_ids"]
         confidences = json_msg["confidences"]
-        
+
         if speedLimitAssist.limit != 0.0:
             current_speed_limit = speedLimitAssist.limit
         else:
@@ -103,7 +116,7 @@ def traffic_sign_detection_callback(topic_name, msg, time):
                     current_speed_limit = kmh2mps(80)
                 elif class_id == 15:
                     current_speed_limit = kmh2mps(90)
-                
+
                 # Just store Speed Limits with high confidence
                 if confidence > 0.6:
                     speedLimitAssist.limit = current_speed_limit
@@ -112,6 +125,7 @@ def traffic_sign_detection_callback(topic_name, msg, time):
         logger.error(f"Error: Could not decode message: '{msg}'")
     except Exception as e:
         logger.error(f"Error: {e}")
+
 
 if __name__ == "__main__":
     logger.info("Starting speed_limit_assist...")
@@ -129,10 +143,10 @@ if __name__ == "__main__":
     # Set the Callbacks
     tsd_sub.set_callback(traffic_sign_detection_callback)
     vd_sub.set_callback(vehicle_dynamics_callback)
-    
+
     # Just don't exit
     while ecal_core.ok():
         time.sleep(0.5)
-    
+
     # finalize eCAL API
     ecal_core.finalize()

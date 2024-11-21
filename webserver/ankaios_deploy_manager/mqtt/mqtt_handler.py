@@ -1,25 +1,26 @@
-import paho.mqtt.client as mqtt
-from ankaios_deploy_manager import settings
 import json
 from logging import Logger
 
+import paho.mqtt.client as mqtt
+from ankaios_deploy_manager import settings
 
 logger = Logger(__name__)
 
-VEHICLE_DYNAMICS_TOPIC = 'vehicle/vehicle_dynamics'
-REMOVE_DATA_TOPIC = 'ankaios_deploy_manager/mqtt/remove_cluster'
+VEHICLE_DYNAMICS_TOPIC = "vehicle/vehicle_dynamics"
+REMOVE_DATA_TOPIC = "ankaios_deploy_manager/mqtt/remove_cluster"
 
-class MqttHandler():
+
+class MqttHandler:
     active_vehicle_dynamics = {}
     client = None
 
     def on_connect(mqtt_client, userdata, flags, rc):
         if rc == 0:
-            logger.info('Connected successfully')
+            logger.info("Connected successfully")
             mqtt_client.subscribe(VEHICLE_DYNAMICS_TOPIC)
             mqtt_client.subscribe(REMOVE_DATA_TOPIC)
         else:
-            logger.info('Bad connection. Code:', rc)
+            logger.info("Bad connection. Code:", rc)
 
     def on_message(mqtt_client, userdata, msg):
         if msg.topic == VEHICLE_DYNAMICS_TOPIC:
@@ -32,11 +33,11 @@ class MqttHandler():
         logger.info(data)
 
         # To test with windows mosquitto_pub calls
-        data = data.decode('ascii').replace("'", "\"")
+        data = data.decode("ascii").replace("'", '"')
         logger.info(data)
-        
+
         vehicle_dynamics = json.loads(data)
-        vehicle_id = vehicle_dynamics['vehicle_id']
+        vehicle_id = vehicle_dynamics["vehicle_id"]
 
         if not vehicle_id in MqttHandler.active_vehicle_dynamics:
             MqttHandler.active_vehicle_dynamics[vehicle_id] = []
@@ -44,7 +45,7 @@ class MqttHandler():
         MqttHandler.active_vehicle_dynamics[vehicle_id].insert(0, vehicle_dynamics)
 
         del MqttHandler.active_vehicle_dynamics[vehicle_id][100:]
-        
+
     def on_remove_data(data):
         logger.info("on_remove_data")
         logger.info(data)
@@ -52,7 +53,7 @@ class MqttHandler():
         found_index = -1
         for i in len(MqttHandler.active_clusters):
             active_cluster = MqttHandler.active_clusters[i]
-            if active_cluster['id'] == cluster_data['id']:
+            if active_cluster["id"] == cluster_data["id"]:
                 found_index = i
 
         if found_index != -1:
@@ -67,9 +68,10 @@ class MqttHandler():
         MqttHandler.client.connect(
             host=settings.MQTT_SERVER,
             port=settings.MQTT_PORT,
-            keepalive=settings.MQTT_KEEPALIVE
+            keepalive=settings.MQTT_KEEPALIVE,
         )
         MqttHandler.client.loop_start()
+
     def deploy_yaml(yaml, vehicle_ids):
         for vehicle_id in vehicle_ids:
             MqttHandler.client.publish(f"vehicle/{vehicle_id}/manifest/apply/req", yaml)
