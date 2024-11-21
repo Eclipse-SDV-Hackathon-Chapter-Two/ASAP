@@ -45,36 +45,40 @@
 <body> 
 	<div id="dashboard">
 		{% for vehicle_id,cluster_data_list in active_vehicle_dynamics.items %}
-			<div class="card-deck" style="margin: 10px;">
+			<div class="card-deck">
 				<div class="card">
-					<h5 class="card-header">VIN: {{vehicle_id}}</h5>
-					<div class="card-group" style="margin: 10px;">
-						{% for agent_name,agent_data in cluster_data_list.0.workload_states.items %}
-							<div class="card">
-								<h5 class="card-header">{{agent_name}}</h5>
-								<div class="card-body" style="margin: 5px;">
-									{% for workload_name,workload_data in agent_data.items %}
-										{% for workload_version,workload_version_data in workload_data.items %}
-											<div class="card" style="margin: 5px;">
-												<div class="card-header">Workload</div>
-												<div class="card-body">
-													<h5 class="card-title">{{workload_name}}</h5>
-													<p class="card-text">Version: {{workload_version}}</p>
-													<p class="card-text">State: {{workload_version_data.state}}</p>
-													<p class="card-text">Substate: {{workload_version_data.substate}}</p>
+					<div class="card-header">Vehicle</div>
+						<div class="card-body">
+							<h5 class="card-title">VIN: {{vehicle_id}}</h5>
+						<div class="card-deck">
+							{% for agent_name,agent_data in cluster_data_list.0.workload_states.items %}
+								<div class="card">
+									<div class="card-header">Agent</div>
+									<div class="card-body" style="margin: 5px;">
+										<h5 class="card-title">{{agent_name}}</h5>
+										{% for workload_name,workload_data in agent_data.items %}
+											{% for workload_version,workload_version_data in workload_data.items %}
+												<div class="card" style="margin: 5px;">
+													<div class="card-header">Workload</div>
+													<div class="card-body">
+														<h5 class="card-title">{{workload_name}}</h5>
+														<p class="card-text">Version: {{workload_version}}</p>
+														<p class="card-text">State: {{workload_version_data.state}}</p>
+														<p class="card-text">Substate: {{workload_version_data.substate}}</p>
+													</div>
 												</div>
-											</div>
+											{% endfor %}
 										{% endfor %}
-									{% endfor %}
+									</div>
 								</div>
-							</div>
-						{% endfor %}
-						<div>
-							<div class="card-body">
-								<p class="card-text">Speed: {{cluster_data_list.0.signals.speed}}</p>
-								<p class="card-text">Displayed speed: {{cluster_data_list.0.signals.speedDisplayed}}</p>
-								<p class="card-text">Steering speed: {{cluster_data_list.0.signals.steeringWheelAngleSpeed}}</p>
-								<p class="card-text">Steer torque: {{cluster_data_list.0.signals.drvSteerTorque}}</p>
+							{% endfor %}
+							<div>
+								<div class="card-body">
+									<p class="card-text">Speed: {{cluster_data_list.0.signals.speed}}</p>
+									<p class="card-text">Displayed speed: {{cluster_data_list.0.signals.speedDisplayed}}</p>
+									<p class="card-text">Steering speed: {{cluster_data_list.0.signals.steeringWheelAngleSpeed}}</p>
+									<p class="card-text">Steer torque: {{cluster_data_list.0.signals.drvSteerTorque}}</p>
+								</div>
 							</div>
 						</div>
 					</div>
