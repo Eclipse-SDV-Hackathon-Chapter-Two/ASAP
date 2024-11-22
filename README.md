@@ -18,6 +18,14 @@ To orchestrate the workloads, we implemented a simple [webserver](webserver). A 
       1. or wherever you have demo measurement data to play with eCal..
 3. Open the webserver on localhost:8000
 
+### Running a local Mosquitto instance
+
+When running on a local MQTT Broker (instead of ours hosted on Azure), run
+``mosquitto``
+from inside the dev container.
+
+To reference the local broker, edit the "MQTT_BROKER_ADDR" env var inside the shift2sdv_manifest.yml as well as in "webserver/ankaios_deploy_manager/settings.py" to point to localhost instead.
+
 ## Technologies used
 - [Ankaios](https://projects.eclipse.org/projects/automotive.ankaios)
 - [eCal](https://projects.eclipse.org/projects/automotive.ecal)
